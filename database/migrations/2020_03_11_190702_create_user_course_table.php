@@ -16,7 +16,7 @@ class CreateUserCourseTable extends Migration
         Schema::create('user_course', function (Blueprint $table) {
             $table->bigInteger('id_user')->unsigned();
             $table->bigInteger('id_course')->unsigned();
-            $table->string('role');
+            $table->integer('role');
 
             $table->primary(['id_user', 'id_course']);
 
