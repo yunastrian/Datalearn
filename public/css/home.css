@@ -1,0 +1,13 @@
+.profile {
+    display: inline-block;
+    text-align: center;
+}
+
+#name {
+    font-weight: bold;
+    margin-top: 5rem;
+}
+
+#edit {
+    margin-top: 2rem;
+}
