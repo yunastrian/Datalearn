@@ -14,13 +14,13 @@ class CreateSpreadsheetsTable extends Migration
     public function up()
     {
         Schema::create('spreadsheets', function (Blueprint $table) {
-            $table->bigInteger('id_topic')->unsigned();
+            $table->string('id');
             $table->string('cell');
             $table->string('value');
             $table->string('type');
 
-            $table->primary(['id_topic', 'cell']);
-            $table->foreign('id_topic')->references('id')->on('topics');
+            $table->primary(['id', 'cell']);
+            $table->foreign('id')->references('id_spreadsheet')->on('topics');
         });
     }
 

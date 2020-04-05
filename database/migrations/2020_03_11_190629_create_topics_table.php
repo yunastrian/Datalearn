@@ -18,6 +18,7 @@ class CreateTopicsTable extends Migration
             $table->bigInteger('id_course')->unsigned();
             $table->string('name');
             $table->string('content');
+            $table->string('id_spreadsheet');
 
             $table->foreign('id_course')->references('id')->on('courses');
         });
