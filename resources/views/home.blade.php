@@ -7,31 +7,13 @@
             <div class="card">
                 <div class="card-header">Kelasku</div>
                 <div class="card-columns card-body">
-                    <div class="card course" style="width: 14rem">
-                        <img src="img/course1.png" class="card-img-top" alt="No Picture">
-                        <div class="card-header">Pengenalan Spreadsheet</div>
-                        <a href="/1" class="stretched-link"></a>
-                    </div>
-                    <div class="card course" style="width: 14rem">
-                        <img src="img/course1.png" class="card-img-top" alt="No Picture">
-                        <div class="card-header">Pengenalan Spreadsheet 2</div>
-                        <a href="/2" class="stretched-link"></a>
-                    </div>
-                    <div class="card course" style="width: 14rem">
-                        <img src="img/course1.png" class="card-img-top" alt="No Picture">
-                        <div class="card-header">Pengenalan Spreadsheet</div>
-                        <a href="/3" class="stretched-link"></a>
-                    </div>
-                    <div class="card course" style="width: 14rem">
-                        <img src="img/course1.png" class="card-img-top" alt="No Picture">
-                        <div class="card-header">Pengenalan Spreadsheet 4</div>
-                        <a href="/4" class="stretched-link"></a>
-                    </div>
-                    <div class="card course" style="width: 14rem">
-                        <img src="img/course1.png" class="card-img-top" alt="No Picture">
-                        <div class="card-header">Pengenalan Spreadsheet 4</div>
-                        <a href="/4" class="stretched-link"></a>
-                    </div>
+                    @foreach($enrolled as $enroll)
+                        <div class="card course" style="width: 14rem">
+                            <img src="img/course1.png" class="card-img-top" alt="No Picture">
+                            <div class="card-header">{{ $enroll->name }}</div>
+                            <a href="/class/<?php echo $enroll->id; ?>" class="stretched-link"></a>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -40,9 +22,9 @@
                 <div class="card-header">Profil</div>
                 <div class="card-body profile">
                     <img src="img/profile.jpg" style="width:120px;height:120px;" alt="No Picture"> <br/> <br/>
-                    <a id="name">Kurniandha Sukma Yunastrian</a> <br/>
-                    <a id="email">kurnia@gmail.com</a> <br/>
-                    <a id="role">Pengajar</a> <br/>
+                    <a id="name">{{ $profile->name }}</a> <br/>
+                    <a id="email">{{ $profile->email }}</a> <br/>
+                    <a id="role">{{ $role }}</a> <br/>
                     <a id="edit" href="/edit_profile" class="btn btn-primary" role="button">Edit Profil</a>
                 </div>
             </div>
@@ -53,40 +35,26 @@
             <div class="card">
                 <div class="card-header">Kelas Tersedia</div>
                 <div class="card-body">
-                    <div class="accordion" id="accordionExample">
-                        <div class="card">
-                            <div class="card-header" id="headingOne">
-                                <h5 class="mb-0">
-                                    <button class="btn btn-link stretched-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                        Spreadsheet Expert 1
-                                    </button>
-                                </h5>
-                            </div>
+                    <div class="accordion" id="accordionCourses">
+                        @foreach($courses as $index => $course)
+                            <div class="card">
+                                <div class="card-header" id="heading<?php echo $course->id; ?>">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link stretched-link" type="button" data-toggle="collapse" data-target="#collapse<?php echo $course->id; ?>" aria-expanded="false" aria-controls="collapse<?php echo $course->id; ?>">
+                                            {{ $course->name }}
+                                        </button>
+                                    </h5>
+                                </div>
 
-                            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                <div class="card-body">
-                                    Belajar tentang spreadsheet dengan level expert <br/>
-                                    Pengajar : <br/> <br/>
-                                    <a href="/enroll" class="btn btn-primary" role="button">Daftar Kelas</a>
+                                <div id="collapse<?php echo $course->id; ?>" class="collapse" aria-labelledby="heading<?php echo $course->id; ?>" data-parent="#accordionCourses">
+                                    <div class="card-body">
+                                        {{ $course->description }} <br/>
+                                        Pengajar : {{ $teachers[$index] }} <br/> <br/>
+                                        <a href="/enroll" class="btn btn-primary" role="button">Daftar Kelas</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-header" id="headingTwo">
-                                <h5 class="mb-0">
-                                    <button class="btn btn-link collapsed stretched-link" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                        Expert 2
-                                    </button>
-                                </h5>
-                            </div>
-                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                                <div class="card-body">
-                                    Belajar tentang spreadsheet dengan level expert part 2 <br/>
-                                    Pengajar : <br/> <br/>
-                                    <a href="/enroll" class="btn btn-primary" role="button">Daftar Kelas</a>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
