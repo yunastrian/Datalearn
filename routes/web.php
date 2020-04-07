@@ -19,7 +19,6 @@ Route::get('/test', function () {
 });
 
 Auth::routes();
-// Route::get('/home', function () {
-//     return view('home');
-// });
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/course/{id_course}', 'CourseController@index')->name('course');
+Route::get('/course/{id_course}/learn/{id_spreadsheet}', 'LearnController@index')->name('learn');

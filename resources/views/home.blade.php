@@ -11,7 +11,7 @@
                         <div class="card course" style="width: 14rem">
                             <img src="img/course1.png" class="card-img-top" alt="No Picture">
                             <div class="card-header">{{ $enroll->name }}</div>
-                            <a href="/class/<?php echo $enroll->id; ?>" class="stretched-link"></a>
+                            <a href="/course/<?php echo $enroll->id; ?>" class="stretched-link"></a>
                         </div>
                     @endforeach
                 </div>
@@ -62,11 +62,3 @@
     </div>
 </div>
 @endsection
-
-<style>
-    courses {
-        display: block;
-        width: 100%;
-        height: 100%;
-    }
-</style>
