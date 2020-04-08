@@ -17,9 +17,6 @@ Route::get('/', function () {
 Route::get('/test', function () {
     return view('test');
 });
-Route::get('/redirect.php', function () {
-    return view('redirect');
-});
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
