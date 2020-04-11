@@ -17,7 +17,8 @@ function iOrderedList(){
 	richTextField.document.execCommand("InsertUnorderedList", false,"newUL");
 }
 function submit_form(){
+	console.log(tinymce.get('rich').getContent({format : 'raw'}));
 	var theForm = document.getElementById("myform");
-	theForm.elements["myTextArea"].value = window.frames['richTextField'].document.body.innerHTML;
+	theForm.elements["myTextArea"].value = tinymce.get('rich').getContent({format : 'raw'});
 	theForm.submit();
 }

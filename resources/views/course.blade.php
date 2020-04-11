@@ -31,7 +31,11 @@
                                 <div id="collapse<?php echo $topic->id; ?>" class="collapse show" aria-labelledby="heading<?php echo $topic->id; ?>" data-parent="#accordionTopics">
                                     <div class="card-body">
                                         {{ $topic->content }} <br/> <br/>
-                                        <a href="<?php echo $topic->id_course; ?>/learn/<?php echo $topic->id_spreadsheet; ?>" class="btn btn-primary" role="button">Buka Topik</a>
+                                        @if(Auth::user()->role == 1)
+                                            <a href="<?php echo $topic->id_course; ?>/learn/<?php echo $topic->id_spreadsheet; ?>/edit" class="btn btn-primary" role="button">Buka Topik</a>
+                                        @else
+                                            <a href="<?php echo $topic->id_course; ?>/learn/<?php echo $topic->id_spreadsheet; ?>" class="btn btn-primary" role="button">Buka Topik</a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

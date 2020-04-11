@@ -25,7 +25,17 @@ class LearnController extends Controller
      */
     public function index($id_course, $id_spreadsheet)
     {
-        return view('learn', ['id_spreadsheet' => $id_spreadsheet]);
+        $client = LearnController::getClient();
+        $service = new \Google_Service_Drive($client);
+        $copy = new \Google_Service_Drive_DriveFile();
+
+        $response = $service->files->copy($id_spreadsheet, $copy);
+
+        $permission_response = LearnController::edit_permission($response->id);
+
+        $topic = DB::table('topics')->where('id_spreadsheet', $id_spreadsheet)->first();
+        $content = $topic->content;
+        return view('learn', ['id_spreadsheet' => $response->id, 'content' => $content]);
     }
 
     /**
@@ -47,13 +57,7 @@ class LearnController extends Controller
         ]);
         $response = $service->spreadsheets->create($spreadsheet, ['fields' => 'spreadsheetId']);
 
-        // Edit permission
-        $service2 = new \Google_Service_Drive($client);
-        $permission2 = new \Google_Service_Drive_Permission([
-            'role' => 'writer',
-            'type' => 'anyone'
-        ]);
-        $response2 = $service2->permissions->create($response->spreadsheetId, $permission2);
+        $permission_response = LearnController::edit_permission($response->spreadsheetId);
 
         if (empty($response->spreadsheetId)) {
             $msg = 0;
@@ -70,15 +74,61 @@ class LearnController extends Controller
     }
 
     /**
+     * Edit Permission.
+     *
+     * @return response
+     */
+    public function edit_permission($id)
+    {
+        $client = LearnController::getClient();
+        $service = new \Google_Service_Drive($client);
+        $permission = new \Google_Service_Drive_Permission([
+            'role' => 'writer',
+            'type' => 'anyone'
+        ]);
+        $response = $service->permissions->create($id, $permission);
+
+        return $response;
+    }
+
+    /**
      * Edit Spreadsheet.
+     *
+     * @return view
+     */
+    public function edit($id_course, $id_spreadsheet)
+    {
+        $topic = DB::table('topics')->where('id_spreadsheet', $id_spreadsheet)->first();
+        return view('edit', ['id_spreadsheet' => $id_spreadsheet, 'topic' => $topic]);
+    }
+
+    /**
+     * Save Spreadsheet.
      *
      * @return message
      */
-    public function edit(Request $request)
+    public function save(Request $request)
     {
-        echo 'htmlentities';
-        echo htmlentities('_token=g3S3CcOUpXXaTOIdwsxCZzejdAlRzpFTGXoV5C5j&%E2%80%9DmyTextarea%E2%80%9D=%3Cp%3ENext%2C+use+our+Get+Started+docs+to+setup+Tiddny%21%3C%2Fp%3E');
-        echo $request->Next;
+        echo $request->id_spreadsheet;
+        echo $request->myTextArea;
+        echo $request->richh;
+        DB::table('topics')->insert([
+            'id_course' => '2',
+            'name' => 'ahaha',
+            'content' => $request->richh,
+            'id_spreadsheet' => $request->id_spreadsheet
+        ]);
+    }
+
+    /**
+     * Save Spreadsheet.
+     *
+     * @return message
+     */
+    public function test()
+    {
+        $profile = DB::table('topics')->where('id', 5)->first();
+        echo $profile->content;
     }
 
     /**

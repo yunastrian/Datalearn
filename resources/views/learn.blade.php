@@ -20,15 +20,8 @@
             <div class="card">
                 <div class="card-header">Judul</div>
                 <div class="card-body">
-                    Ahaii
+                    <?php echo $content;?>
                 </div>
-            </div>
-            <div>
-                <form action="<?php echo Request::url(); ?>/edit/submit" method="post">
-                    {{ csrf_field() }}
-                    <mtextarea name=”myTextarea” id=”myTextarea”>Next, use our Get Started docs to setup Tiddny!</mtextarea>
-                    <button type="submit" class="btn btn-primary"><b>Submit</b></button>
-                </form>
             </div>
         </div>
         <div class="col-lg-8">
@@ -37,7 +30,7 @@
                 frameBorder="0"
                 src="https://docs.google.com/spreadsheets/d/<?php echo $id_spreadsheet; ?>/edit?usp=drivesdk&rm=embedded">
             </iframe>
-            <form action="<?php echo Request::url(); ?>/submit" method="post">
+            <form action="<?php echo Request::url(); ?>/submit" name="myform" id="myform" method="post">
                 <input type="hidden" value="<?php echo $id_spreadsheet; ?>" class="form-control" name="id_spreadsheet" id="id_spreadsheet">
                 <button style="float: right;" type="submit" class="btn btn-success"><b>Submit</b></button>
             </form>
