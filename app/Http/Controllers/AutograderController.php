@@ -32,8 +32,57 @@ class AutograderController extends Controller
             $cells[] = 'Sheet1!' . $answer_key->cell;
             $keys[] = $answer_key->value;
         }
-        
+
         $answers = AutograderController::getStudentAnswer($request->id_spreadsheet, $cells);
+        
+        AutograderController::grade($keys, $answers);
+    }
+
+    /**
+     * Get grade from answer.
+     *
+     * @return grades
+     */
+    public function grade($keys, $answers) 
+    {
+        $results = [];
+        for($i=0; $i<count($keys); $i++) {
+            $key_temp = preg_split("/[)\s,(-]+/", $keys[$i]);
+            $answer_temp = preg_split("/[)\s,(-]+/", $answers[$i]);
+
+            $key = [];
+            for($j=0; $j<count($key_temp); $j++) {
+                if (!empty($key_temp[$j])) {
+                    $key[] = $key_temp[$j];
+                }
+            }
+
+            $answer = [];
+            for($j=0; $j<count($answer_temp); $j++) {
+                if (!empty($answer_temp[$j])) {
+                    $answer[] = $answer_temp[$j];
+                }
+            }
+
+            $results[] = AutograderController::jaccardIndex($key, $answer);
+        }
+
+        foreach($results as $result) {
+            echo $result . " <br/> ";
+        }
+    }
+
+    /**
+     * Get Jaccard Index score.
+     *
+     * @return score
+     */
+    public function jaccardIndex($key, $answer) {
+        $arr_intersection = count(array_intersect( $key, $answer ));
+        $arr_union = count(array_merge( $key, $answer )) - $arr_intersection;
+        $jaccard_index = $arr_intersection / $arr_union;
+
+        return $jaccard_index;
     }
 
     /**
@@ -71,13 +120,23 @@ class AutograderController extends Controller
 
     public function test()
     {
-        $j = [];
-        $j[] = 'haah';
-        $j[] = NULL;
-        $j[] = '=gg';
+        $item1 = [];
+        $item2 = [];
 
-        foreach($j as $k) {
-            echo $k . "\n";
-        }
+        $item1[] = '=SUM';
+        $item1[] = 'A1';
+        $item1[] = 'A2';
+        $item1[] = 'A3';
+
+        $item2[] = '=SUM';
+        $item2[] = 'A8';
+        $item2[] = 'A2';
+        $item2[] = 'A1';
+
+        $arr_intersection = count(array_intersect( $item1, $item2 ));
+        $arr_union = count(array_merge( $item1, $item2 )) - $arr_intersection;
+        $coefficient = $arr_intersection / $arr_union;
+
+        echo "koefisien = " . $coefficient;
     }
 }
