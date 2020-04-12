@@ -18,10 +18,10 @@ Route::get('/', function () {
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/test', 'LearnController@test')->name('test');
+Route::get('/test', 'AutograderController@test')->name('test');
 Route::get('/course/{id_course}', 'CourseController@index')->name('course');
 Route::post('/course/{id_course}/learn/new', 'LearnController@new')->name('learn/new');
-Route::get('/course/{id_course}/learn/{id_spreadsheet}', 'LearnController@index')->name('learn');
-Route::get('/course/{id_course}/learn/{id_spreadsheet}/edit', 'LearnController@edit')->name('edit');
-Route::post('/course/{id_course}/learn/{id_spreadsheet}/edit/save', 'LearnController@save')->name('edit/save');
-Route::post('/course/{id_course}/learn/{id_spreadsheet}/submit', 'LearnController@submit')->name('learn/submit');
+Route::get('/course/{id_course}/learn/{id_topic}', 'LearnController@index')->name('learn');
+Route::get('/course/{id_course}/learn/{id_topic}/edit', 'LearnController@edit')->name('edit');
+Route::post('/course/{id_course}/learn/{id_topic}/edit/save', 'LearnController@save')->name('edit/save');
+Route::post('/course/{id_course}/learn/{id_topic}/submit', 'AutograderController@index')->name('autograder');

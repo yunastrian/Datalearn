@@ -23,18 +23,19 @@ class LearnController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($id_course, $id_spreadsheet)
+    public function index($id_course, $id_topic)
     {
+        $topic = DB::table('topics')->where('id', $id_topic)->first();
+        $content = $topic->content;
+
         $client = LearnController::getClient();
         $service = new \Google_Service_Drive($client);
         $copy = new \Google_Service_Drive_DriveFile();
 
-        $response = $service->files->copy($id_spreadsheet, $copy);
+        $response = $service->files->copy($topic->id_spreadsheet, $copy);
 
         $permission_response = LearnController::edit_permission($response->id);
 
-        $topic = DB::table('topics')->where('id_spreadsheet', $id_spreadsheet)->first();
-        $content = $topic->content;
         return view('learn', ['id_spreadsheet' => $response->id, 'content' => $content]);
     }
 
@@ -96,10 +97,10 @@ class LearnController extends Controller
      *
      * @return view
      */
-    public function edit($id_course, $id_spreadsheet)
+    public function edit($id_course, $id_topic)
     {
-        $topic = DB::table('topics')->where('id_spreadsheet', $id_spreadsheet)->first();
-        return view('edit', ['id_spreadsheet' => $id_spreadsheet, 'topic' => $topic]);
+        $topic = DB::table('topics')->where('id', $id_topic)->first();
+        return view('edit', ['id_spreadsheet' => $topic->id_spreadsheet, 'topic' => $topic]);
     }
 
     /**
@@ -118,53 +119,6 @@ class LearnController extends Controller
             'content' => $request->richh,
             'id_spreadsheet' => $request->id_spreadsheet
         ]);
-    }
-
-    /**
-     * Submit Spreadsheet.
-     *
-     * @return Score
-     */
-    public function submit(Request $request) 
-    {
-        $id = $request->id_spreadsheet;
-        $client = LearnController::getClient();
-        $service = new \Google_Service_Sheets($client);
- 
-        $ranges = [];
-        $ranges[] = 'Sheet1!A1';
-        $ranges[] = 'Sheet1!A2';
-        $ranges[] = 'Sheet1!A3';
-        $responses = $service->spreadsheets_values->batchGet($request->id_spreadsheet, [
-            'valueRenderOption' => 'FORMULA',
-            'dateTimeRenderOption' => 'SERIAL_NUMBER',
-            'ranges' => $ranges
-        ]);
-
-        foreach ($responses->valueRanges as $response) {
-            if ($response->values == NULL) {
-                echo "Kosong \n";
-            } else {
-                echo '<pre>', var_export(strval(($response->values)[0][0]), true), '</pre>', "\n";
-            }
-        }
-    }
-
-    public function test()
-    {
-        $answer = DB::table('spreadsheets')->where('id', 1)->get();
-        $j = [];
-        foreach($answer as $a) {
-            $j[] = 'Sheet1!' . $a->cell;
-        }
-
-        var_dump($j);
-
-        $ranges = [];
-        $ranges[] = 'Sheet1!A1';
-        $ranges[] = 'Sheet1!A2';
-        $ranges[] = 'Sheet1!A3';
-        var_dump($ranges);
     }
 
     /**
