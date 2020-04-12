@@ -1,19 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- <form action="<?php echo Request::url(); ?>/edit/submit" name="myform" id="myform" method="post">
-    {{ csrf_field() }}
-    <div id="wysiwyg_cp" style="padding:8px; width:700px;">
-    <input type="button" onClick="iBold()" value="B"> 
-    <input type="button" onClick="iUnderline()" value="U">
-    <input type="button" onClick="iItalic()" value="I">
-    <input type="button" onClick="iUnorderedList()" value="UL">
-    <input type="button" onClick="iOrderedList()" value="OL">
-    </div>
-    <textarea style="display:none;" name="myTextArea" id="myTextArea" cols="100" rows="14"></textarea>
-    <iframe name="richTextField" id="richTextField" style="border:#000000 1px solid; width:700px; height:300px;"></iframe>
-    <input name="myBtn" type="button" value="Submit Data" onClick="javascript:submit_form();"/>
-</form> -->
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-4">
@@ -31,6 +18,7 @@
                 src="https://docs.google.com/spreadsheets/d/<?php echo $id_spreadsheet; ?>/edit?usp=drivesdk&rm=embedded">
             </iframe>
             <form action="<?php echo Request::url(); ?>/submit" name="myform" id="myform" method="post">
+                @csrf
                 <input type="hidden" value="<?php echo $id_spreadsheet; ?>" class="form-control" name="id_spreadsheet" id="id_spreadsheet">
                 <button style="float: right;" type="submit" class="btn btn-success"><b>Submit</b></button>
             </form>

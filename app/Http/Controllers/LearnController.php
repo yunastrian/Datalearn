@@ -121,14 +121,50 @@ class LearnController extends Controller
     }
 
     /**
-     * Save Spreadsheet.
+     * Submit Spreadsheet.
      *
-     * @return message
+     * @return Score
      */
+    public function submit(Request $request) 
+    {
+        $id = $request->id_spreadsheet;
+        $client = LearnController::getClient();
+        $service = new \Google_Service_Sheets($client);
+ 
+        $ranges = [];
+        $ranges[] = 'Sheet1!A1';
+        $ranges[] = 'Sheet1!A2';
+        $ranges[] = 'Sheet1!A3';
+        $responses = $service->spreadsheets_values->batchGet($request->id_spreadsheet, [
+            'valueRenderOption' => 'FORMULA',
+            'dateTimeRenderOption' => 'SERIAL_NUMBER',
+            'ranges' => $ranges
+        ]);
+
+        foreach ($responses->valueRanges as $response) {
+            if ($response->values == NULL) {
+                echo "Kosong \n";
+            } else {
+                echo '<pre>', var_export(strval(($response->values)[0][0]), true), '</pre>', "\n";
+            }
+        }
+    }
+
     public function test()
     {
-        $profile = DB::table('topics')->where('id', 5)->first();
-        echo $profile->content;
+        $answer = DB::table('spreadsheets')->where('id', 1)->get();
+        $j = [];
+        foreach($answer as $a) {
+            $j[] = 'Sheet1!' . $a->cell;
+        }
+
+        var_dump($j);
+
+        $ranges = [];
+        $ranges[] = 'Sheet1!A1';
+        $ranges[] = 'Sheet1!A2';
+        $ranges[] = 'Sheet1!A3';
+        var_dump($ranges);
     }
 
     /**
