@@ -2,6 +2,16 @@
 
 @section('content')
 <div class="container">
+@isset(request()->msg)
+    @if( request()->get('msg') == 1 )
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Profil Berhasil Diubah
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+@endisset
     <div class="row justify-content">
         <div class="col-md-8">
             <div class="card">
@@ -24,8 +34,35 @@
                     <img src="img/profile.jpg" style="width:120px;height:120px;" alt="No Picture"> <br/> <br/>
                     <a id="name">{{ $profile->name }}</a> <br/>
                     <a id="email">{{ $profile->email }}</a> <br/>
-                    <a id="role">{{ $role }}</a> <br/>
-                    <a id="edit" href="/edit_profile" class="btn btn-primary" role="button">Edit Profil</a>
+                    <a id="role">{{ $role }}</a> <br/><br/>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                        Edit Profile
+                    </button>
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <form action="/profile" method="post">
+                                    {{ csrf_field() }}
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalCenterTitle">Edit Profil</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="topic-name" class="col-form-label">Nama</label>
+                                            <input type="text" class="form-control" name="new_name" id="new_name" required="required" value="<?php echo $profile->name ?>">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

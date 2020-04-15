@@ -51,4 +51,13 @@ class HomeController extends Controller
 
         return view('home', ['profile' => $profile, 'role' => $role, 'courses' => $courses, 'teachers' => $teachers, 'enrolled' => $enrolled]);
     }
+
+    public function profile(Request $request)
+    {
+        DB::table('users')->where('id', Auth::id())->update([
+            'name' => $request->new_name,
+        ]);
+        
+        return redirect()->route('home', ['msg' => 1]);
+    }
 }

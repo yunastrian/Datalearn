@@ -36,7 +36,7 @@ class LearnController extends Controller
 
         $permission_response = LearnController::edit_permission($response->id);
 
-        return view('learn', ['id_spreadsheet' => $response->id, 'content' => $content]);
+        return view('learn', ['topic_name' => $topic->name, 'id_course' => $id_course, 'id_spreadsheet' => $response->id, 'content' => $content]);
     }
 
     /**
