@@ -15,3 +15,14 @@ function submit(id_spreadsheet, url) {
     xmlhttp.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr('content'));
     xmlhttp.send("id_spreadsheet=" + id_spreadsheet);
 }
+
+function setForm(number) {
+    if (number > 0) {
+        document.getElementById("cell-answers").innerHTML = '';
+        var str = "";
+        for (i=0; i<number; i++) {
+            str = str.concat('<div class="col-3" style="margin-bottom:1rem;"> <input type="text" name="cells[]" class="form-control"></div>');
+        }
+        document.getElementById("cell-answers").innerHTML = str;
+    }
+}

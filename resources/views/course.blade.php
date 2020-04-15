@@ -4,12 +4,25 @@
 <div class="container">
 @isset(request()->msg)
     @if( request()->get('msg') == 1 )
-        <div class="alert alert-success" role="alert">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             Pembuatan Topik Berhasil
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @elseif( request()->get('msg') == 2 )
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Perubahan Topik Berhasil Disimpan
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
     @else
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
             Pembuatan Topik Gagal
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
     @endif
 @endisset
@@ -40,10 +53,13 @@
                                 </div>
                             </div>
                         @endforeach
-                    </div> <br/>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-                       Tambah Topik
-                    </button>
+                    </div> 
+                    @if(Auth::user()->role == 1)
+                        <br/>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                        Tambah Topik
+                        </button>
+                    @endif
                     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">

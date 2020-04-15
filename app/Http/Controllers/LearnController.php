@@ -108,17 +108,55 @@ class LearnController extends Controller
      *
      * @return message
      */
-    public function save(Request $request)
+    public function save($id_course, $id_topic, Request $request)
     {
-        echo $request->id_spreadsheet;
-        echo $request->myTextArea;
-        echo $request->richh;
-        DB::table('topics')->insert([
-            'id_course' => '2',
-            'name' => 'ahaha',
-            'content' => $request->richh,
-            'id_spreadsheet' => $request->id_spreadsheet
+        $cells = [];
+        foreach ($request->cells as $cell) {
+            $cells[] = strtoupper($cell);
+        }
+
+        $client = LearnController::getClient();
+        $service = new \Google_Service_Sheets($client);
+
+        // Get Answer
+        $responses = $service->spreadsheets_values->batchGet($request->id_spreadsheet, [
+            'valueRenderOption' => 'FORMULA',
+            'dateTimeRenderOption' => 'SERIAL_NUMBER',
+            'ranges' => $cells
         ]);
+
+        $answers = [];
+        foreach ($responses->valueRanges as $response) {
+            if ($response->values == NULL) {
+                $answers[] = NULL;
+            } else {
+                $answers[] = strtoupper(strval(($response->values)[0][0]));
+            }
+        }
+
+        // Clear Answer
+        $requestBody = new \Google_Service_Sheets_BatchClearValuesRequest([
+            'ranges' => $cells
+        ]);
+
+        $response = $service->spreadsheets_values->batchClear($request->id_spreadsheet, $requestBody);
+
+        // Save to Database
+        DB::table('spreadsheets')->where('id',$id_topic)->delete();
+        for ($i=0; $i<count($answers); $i++) {
+            DB::table('spreadsheets')->insert([
+                'id' => $id_topic,
+                'cell' => $cells[$i],
+                'value' => $answers[$i],
+                'type' => 0
+            ]);   
+        }
+
+        DB::table('topics')->where('id', $id_topic)->update([
+            'content' => $request->rich_text,
+        ]);
+
+        return redirect()->route('course', ['id_course' => $id_course, 'msg' => 2]);
     }
 
     /**

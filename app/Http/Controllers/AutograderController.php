@@ -137,7 +137,7 @@ class AutograderController extends Controller
             if ($response->values == NULL) {
                 $answers[] = NULL;
             } else {
-                $answers[] = strval(($response->values)[0][0]);
+                $answers[] = strtoupper(strval(($response->values)[0][0]));
             }
         }
 
@@ -146,23 +146,6 @@ class AutograderController extends Controller
 
     public function test()
     {
-        $item1 = [];
-        $item2 = [];
-
-        $item1[] = '=SUM';
-        $item1[] = 'A1';
-        $item1[] = 'A2';
-        $item1[] = 'A3';
-
-        $item2[] = '=SUM';
-        $item2[] = 'A8';
-        $item2[] = 'A2';
-        $item2[] = 'A1';
-
-        $arr_intersection = count(array_intersect( $item1, $item2 ));
-        $arr_union = count(array_merge( $item1, $item2 )) - $arr_intersection;
-        $coefficient = $arr_intersection / $arr_union;
-
-        echo "koefisien = " . $coefficient;
+        echo strtoupper("=sum(A1,A2)");
     }
 }
