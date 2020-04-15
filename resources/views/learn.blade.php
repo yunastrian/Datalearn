@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-header">Judul</div>
@@ -17,11 +17,13 @@
                 frameBorder="0"
                 src="https://docs.google.com/spreadsheets/d/<?php echo $id_spreadsheet; ?>/edit?usp=drivesdk&rm=embedded">
             </iframe>
-            <form action="<?php echo Request::url(); ?>/submit" name="myform" id="myform" method="post">
-                @csrf
-                <input type="hidden" value="<?php echo $id_spreadsheet; ?>" class="form-control" name="id_spreadsheet" id="id_spreadsheet">
-                <button style="float: right;" type="submit" class="btn btn-success"><b>Submit</b></button>
-            </form>
+            <button id="submit" style="float: right;" type="text" onclick="submit('<?php echo $id_spreadsheet; ?>', '<?php echo Request::url(); ?>/submit')" class="btn btn-success"><b>Submit</b></button>
+        </div>
+        <div  id="result" class="col-lg-10" style="margin-top: 1rem; display:none">
+            <div class="card">
+                <div class="card-header">Hasil</div>
+                <div id="result-detail" class="card-body"></div>
+            </div>
         </div>
     </div>
 </div>

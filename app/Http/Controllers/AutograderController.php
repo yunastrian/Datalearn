@@ -27,15 +27,43 @@ class AutograderController extends Controller
     {
         $answer_keys = DB::table('spreadsheets')->where('id', $id_topic)->get();
         $cells = [];
+        $cells_temp = [];
         $keys = [];
         foreach($answer_keys as $answer_key) {
             $cells[] = 'Sheet1!' . $answer_key->cell;
+            $cells_temp[] = $answer_key->cell;
             $keys[] = $answer_key->value;
         }
 
         $answers = AutograderController::getStudentAnswer($request->id_spreadsheet, $cells);
         
-        AutograderController::grade($keys, $answers);
+        $results = AutograderController::grade($keys, $answers);
+
+        echo '
+        <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">Cell</th>
+                <th scope="col">Kunci</th>
+                <th scope="col">Jawaban</th>
+                <th scope="col">Skor</th>
+                </tr>
+            </thead>
+            <tbody>             
+        ';
+        for ($i=0; $i<count($results); $i++) {
+            echo '<tr>';
+            echo '<th>' . $cells_temp[$i] . '</th>';
+            echo '<td>' . $keys[$i] . '</td>';
+            echo '<td>' . $answers[$i] . '</td>';
+            echo '<td>' . $results[$i]*100 . '/100</td>';
+            echo '</tr>';
+        }
+        echo '
+                </tbody>
+            </table>
+            <a href="/course/ ' . $id_course . '" style="float: right;" class="btn btn-primary" role="button">Kembali ke Kelas</a>
+        ';
     }
 
     /**
@@ -67,9 +95,7 @@ class AutograderController extends Controller
             $results[] = AutograderController::jaccardIndex($key, $answer);
         }
 
-        foreach($results as $result) {
-            echo $result . " <br/> ";
-        }
+        return $results;
     }
 
     /**
