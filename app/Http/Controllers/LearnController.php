@@ -23,18 +23,19 @@ class LearnController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($id_course, $id_spreadsheet)
+    public function index($id_course, $id_topic)
     {
+        $topic = DB::table('topics')->where('id', $id_topic)->first();
+        $content = $topic->content;
+
         $client = LearnController::getClient();
         $service = new \Google_Service_Drive($client);
         $copy = new \Google_Service_Drive_DriveFile();
 
-        $response = $service->files->copy($id_spreadsheet, $copy);
+        $response = $service->files->copy($topic->id_spreadsheet, $copy);
 
         $permission_response = LearnController::edit_permission($response->id);
 
-        $topic = DB::table('topics')->where('id_spreadsheet', $id_spreadsheet)->first();
-        $content = $topic->content;
         return view('learn', ['id_spreadsheet' => $response->id, 'content' => $content]);
     }
 
@@ -96,10 +97,10 @@ class LearnController extends Controller
      *
      * @return view
      */
-    public function edit($id_course, $id_spreadsheet)
+    public function edit($id_course, $id_topic)
     {
-        $topic = DB::table('topics')->where('id_spreadsheet', $id_spreadsheet)->first();
-        return view('edit', ['id_spreadsheet' => $id_spreadsheet, 'topic' => $topic]);
+        $topic = DB::table('topics')->where('id', $id_topic)->first();
+        return view('edit', ['id_spreadsheet' => $topic->id_spreadsheet, 'topic' => $topic]);
     }
 
     /**
@@ -107,64 +108,55 @@ class LearnController extends Controller
      *
      * @return message
      */
-    public function save(Request $request)
+    public function save($id_course, $id_topic, Request $request)
     {
-        echo $request->id_spreadsheet;
-        echo $request->myTextArea;
-        echo $request->richh;
-        DB::table('topics')->insert([
-            'id_course' => '2',
-            'name' => 'ahaha',
-            'content' => $request->richh,
-            'id_spreadsheet' => $request->id_spreadsheet
-        ]);
-    }
+        $cells = [];
+        foreach ($request->cells as $cell) {
+            $cells[] = strtoupper($cell);
+        }
 
-    /**
-     * Submit Spreadsheet.
-     *
-     * @return Score
-     */
-    public function submit(Request $request) 
-    {
-        $id = $request->id_spreadsheet;
         $client = LearnController::getClient();
         $service = new \Google_Service_Sheets($client);
- 
-        $ranges = [];
-        $ranges[] = 'Sheet1!A1';
-        $ranges[] = 'Sheet1!A2';
-        $ranges[] = 'Sheet1!A3';
+
+        // Get Answer
         $responses = $service->spreadsheets_values->batchGet($request->id_spreadsheet, [
             'valueRenderOption' => 'FORMULA',
             'dateTimeRenderOption' => 'SERIAL_NUMBER',
-            'ranges' => $ranges
+            'ranges' => $cells
         ]);
 
+        $answers = [];
         foreach ($responses->valueRanges as $response) {
             if ($response->values == NULL) {
-                echo "Kosong \n";
+                $answers[] = NULL;
             } else {
-                echo '<pre>', var_export(strval(($response->values)[0][0]), true), '</pre>', "\n";
+                $answers[] = strtoupper(strval(($response->values)[0][0]));
             }
         }
-    }
 
-    public function test()
-    {
-        $answer = DB::table('spreadsheets')->where('id', 1)->get();
-        $j = [];
-        foreach($answer as $a) {
-            $j[] = 'Sheet1!' . $a->cell;
+        // Clear Answer
+        $requestBody = new \Google_Service_Sheets_BatchClearValuesRequest([
+            'ranges' => $cells
+        ]);
+
+        $response = $service->spreadsheets_values->batchClear($request->id_spreadsheet, $requestBody);
+
+        // Save to Database
+        DB::table('spreadsheets')->where('id',$id_topic)->delete();
+        for ($i=0; $i<count($answers); $i++) {
+            DB::table('spreadsheets')->insert([
+                'id' => $id_topic,
+                'cell' => $cells[$i],
+                'value' => $answers[$i],
+                'type' => 0
+            ]);   
         }
 
-        var_dump($j);
+        DB::table('topics')->where('id', $id_topic)->update([
+            'content' => $request->rich_text,
+        ]);
 
-        $ranges = [];
-        $ranges[] = 'Sheet1!A1';
-        $ranges[] = 'Sheet1!A2';
-        $ranges[] = 'Sheet1!A3';
-        var_dump($ranges);
+        return redirect()->route('course', ['id_course' => $id_course, 'msg' => 2]);
     }
 
     /**
