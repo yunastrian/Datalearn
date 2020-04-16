@@ -14,7 +14,7 @@
     <script src="{{ asset('js/text.js') }}" defer></script>
     <script src="{{ asset('js/learn.js') }}" defer></script>
     <script src="https://cdn.tiny.cloud/1/yaezxtmh9h1roazzxnkx70is63n62nbov3xskxim3rpnbcoj/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-    <script>tinymce.init({selector:'textarea'});</script>
+    <script>tinymce.init({selector:'mytextarea'});</script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -28,7 +28,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/home') }}">
+                <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

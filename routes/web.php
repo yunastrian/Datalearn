@@ -10,17 +10,13 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-
 Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
 Route::get('/test', 'AutograderController@test')->name('test');
 Route::post('/profile', 'HomeController@profile')->name('profile');
 Route::get('/course/{id_course}', 'CourseController@index')->name('course');
+Route::post('/course/new', 'CourseController@new')->name('course/new');
+Route::post('/course/enroll', 'CourseController@enroll')->name('course/enroll');
 Route::post('/course/{id_course}/learn/new', 'LearnController@new')->name('learn/new');
 Route::get('/course/{id_course}/learn/{id_topic}', 'LearnController@index')->name('learn');
 Route::get('/course/{id_course}/learn/{id_topic}/edit', 'LearnController@edit')->name('edit');

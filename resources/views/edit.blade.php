@@ -31,7 +31,7 @@
                         </div>
                         <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#accordionCourses">
                             <input type="hidden" value="<?php echo $id_spreadsheet; ?>" class="form-control" name="id_spreadsheet" id="id_spreadsheet">
-                            <textarea name="rich_text" id="rich_text"><?php echo $topic->content;?></textarea>
+                            <mytextarea name="rich_text" id="rich_text"><?php echo $topic->content;?></mytextarea>
                         </div>
                     </div>
                     <div class="card">
@@ -68,6 +68,7 @@
                             </div>
                         </div>
                     </div>
+                    <a style="margin-top: 1rem;" href="/course/<?php echo $id_course; ?>" class="btn btn-secondary" role="button">Kembali ke Kelas</a>
                     <button style="float: right; margin-top: 1rem;" type="submit" class="btn btn-primary"><b>Simpan</b></button>
                 </form>
             </div>

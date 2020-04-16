@@ -41,4 +41,39 @@ class CourseController extends Controller
         
         return view('course', ['topics' => $topics, 'students' => $students, 'teacher' => $teacher]);
     }
+
+    /**
+     * Create new course
+     *
+     * @return newCourse
+     */
+    public function new(Request $request)
+    {
+        $id = DB::table('courses')->insertGetId([
+            'name' => $request->course_name,
+            'description' => $request->course_description,
+        ]);
+
+        DB::table('user_course')->insert([
+            'id_user' => Auth::id(),
+            'id_course' => $id,
+            'role' => 1
+        ]);
+        return redirect()->route('home', ['msg' => 2]);
+    }
+
+    /**
+     * Create new course
+     *
+     * @return newCourse
+     */
+    public function enroll(Request $request)
+    {
+        DB::table('user_course')->insert([
+            'id_user' => Auth::id(),
+            'id_course' => $request->enroll_id,
+            'role' => 0
+        ]);
+        return redirect()->route('home', ['msg' => 3]);
+    }
 }

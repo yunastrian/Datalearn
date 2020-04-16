@@ -100,7 +100,7 @@ class LearnController extends Controller
     public function edit($id_course, $id_topic)
     {
         $topic = DB::table('topics')->where('id', $id_topic)->first();
-        return view('edit', ['id_spreadsheet' => $topic->id_spreadsheet, 'topic' => $topic]);
+        return view('edit', ['id_course' => $id_course, 'id_spreadsheet' => $topic->id_spreadsheet, 'topic' => $topic]);
     }
 
     /**
