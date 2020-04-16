@@ -165,9 +165,4 @@ class AutograderController extends Controller
 
         return $answers;
     }
-
-    public function test()
-    {
-        echo strtoupper("=sum(A1,A2)");
-    }
 }

@@ -67,6 +67,7 @@ class LearnController extends Controller
             DB::table('topics')->insert([
                 'id_course' => $id_course,
                 'name' => $request->topic_name,
+                'description' => $request->topic_description,
                 'content' => 'Konten',
                 'id_spreadsheet' => $response->spreadsheetId
             ]);

@@ -17,7 +17,7 @@ class CreateGradesTable extends Migration
             $table->bigInteger('id_course')->unsigned();
             $table->bigInteger('id_user')->unsigned();
             $table->bigInteger('id_topic')->unsigned();
-            $table->integer('grade');
+            $table->double('grade', 8, 2);
 
             $table->primary(['id_course', 'id_user', 'id_topic']);
 

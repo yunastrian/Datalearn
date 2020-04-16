@@ -46,7 +46,7 @@
                                 </div>
                                 <div id="collapse<?php echo $topic->id; ?>" class="collapse show" aria-labelledby="heading<?php echo $topic->id; ?>" data-parent="#accordionTopics">
                                     <div class="card-body">
-                                        {{ $topic->content }} <br/><br/>
+                                        {{ $topic->description }} <br/><br/>
                                         @if(Auth::user()->role == 1)
                                             <a href="<?php echo $topic->id_course; ?>/learn/<?php echo $topic->id; ?>/edit" class="btn btn-primary" role="button">Edit Materi</a>
                                         @else
@@ -80,10 +80,14 @@
                                         <label for="topic-name" class="col-form-label">Masukkan Judul Materi</label>
                                         <input type="text" class="form-control" name="topic_name" id="topic-name" required="required" placeholder="Judul Topik">
                                     </div>
+                                    <div class="form-group">
+                                        <label for="topic-description">Deskripsi</label>
+                                        <textarea class="form-control" name="topic_description" id="topic_description" rows="2"></textarea>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                                    <button type="submit" class="btn btn-primary">Buat Topik</button>
+                                    <button type="submit" class="btn btn-primary">Tambah Materi</button>
                                 </div>
                             </form>
                         </div>

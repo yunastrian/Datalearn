@@ -12,6 +12,7 @@
 */
 Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
+Route::redirect('/home', '/');
 Route::get('/test', 'AutograderController@test')->name('test');
 Route::post('/profile', 'HomeController@profile')->name('profile');
 Route::get('/course/{id_course}', 'CourseController@index')->name('course');

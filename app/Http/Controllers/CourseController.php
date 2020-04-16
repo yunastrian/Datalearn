@@ -70,8 +70,7 @@ class CourseController extends Controller
 
         DB::table('user_course')->insert([
             'id_user' => Auth::id(),
-            'id_course' => $id,
-            'role' => 1
+            'id_course' => $id
         ]);
         return redirect()->route('home', ['msg' => 2]);
     }
@@ -85,8 +84,7 @@ class CourseController extends Controller
     {
         DB::table('user_course')->insert([
             'id_user' => Auth::id(),
-            'id_course' => $request->enroll_id,
-            'role' => 0
+            'id_course' => $request->enroll_id
         ]);
         return redirect()->route('home', ['msg' => 3]);
     }
