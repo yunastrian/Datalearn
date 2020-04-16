@@ -45,25 +45,15 @@
                         <div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#accordionCourses">
                             <div class="card-body">
                                 <label for="exampleFormControlSelect1">Jumlah Cell Jawaban</label>
-                                <input type="number" class="form-control" id="cell-number" min="1" value="5" onkeyup="setForm(this.value)" onchange="setForm(this.value)">
+                                <input type="number" class="form-control" id="cell-number" min="1" value="{{ count($cells) }}" onkeyup="setForm(this.value)" onchange="setForm(this.value)">
                                 <br/>
                                 <label for="exampleFormControlSelect1">Masukkan Cell Jawaban</label>
                                 <div class="row" id="cell-answers">
-                                    <div class="col-3" style="margin-bottom:1rem;">
-                                        <input type="text" name="cells[]" class="form-control">
-                                    </div>
-                                    <div class="col-3" style="margin-bottom:1rem;">
-                                        <input type="text" name="cells[]" class="form-control">
-                                    </div>
-                                    <div class="col-3" style="margin-bottom:1rem;">
-                                        <input type="text" name="cells[]" class="form-control">
-                                    </div>
-                                    <div class="col-3" style="margin-bottom:1rem;">
-                                        <input type="text" name="cells[]" class="form-control">
-                                    </div>
-                                    <div class="col-3" style="margin-bottom:1rem;">
-                                        <input type="text" name="cells[]" class="form-control">
-                                    </div>
+                                    @foreach($cells as $cell)
+                                        <div class="col-3" style="margin-bottom:1rem;">
+                                            <input type="text" name="cells[]" class="form-control" value="{{ $cell->cell }}">
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

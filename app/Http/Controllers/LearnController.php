@@ -68,7 +68,7 @@ class LearnController extends Controller
                 'id_course' => $id_course,
                 'name' => $request->topic_name,
                 'description' => $request->topic_description,
-                'content' => 'Konten',
+                'content' => '',
                 'id_spreadsheet' => $response->spreadsheetId
             ]);
         }
@@ -115,7 +115,27 @@ class LearnController extends Controller
     public function edit($id_course, $id_topic)
     {
         $topic = DB::table('topics')->where('id', $id_topic)->first();
-        return view('edit', ['id_course' => $id_course, 'id_spreadsheet' => $topic->id_spreadsheet, 'topic' => $topic]);
+        $cells = DB::table('spreadsheets')->where('id', $id_topic)->get();
+
+        // $data = [];
+        // foreach($cells as $cell) {
+        //     $data[] = ['range' => 'Sheet1!' . $cell->cell, 'majorDimension' => 'ROWS', 'values' => array(array($cell->value))]; 
+        // }
+
+        // $client = LearnController::getClient();
+        // $service = new \Google_Service_Sheets($client);
+
+        // $requestBody = new \Google_Service_Sheets_BatchUpdateValuesRequest([
+        //     "valueInputOption" => 'USER_ENTERED',
+        //     "data" => $data,
+        //     "includeValuesInResponse" => false,
+        //     "responseValueRenderOption" => 'FORMULA',
+        //     "responseDateTimeRenderOption" => 'SERIAL_NUMBER'
+        // ]);
+
+        // $response = $service->spreadsheets_values->batchUpdate($topic->id_spreadsheet, $requestBody);
+
+        return view('edit', ['cells' => $cells, 'id_course' => $id_course, 'id_spreadsheet' => $topic->id_spreadsheet, 'topic' => $topic]);
     }
 
     /**
@@ -162,8 +182,7 @@ class LearnController extends Controller
             DB::table('spreadsheets')->insert([
                 'id' => $id_topic,
                 'cell' => $cells[$i],
-                'value' => $answers[$i],
-                'type' => 0
+                'value' => $answers[$i]
             ]);   
         }
 
