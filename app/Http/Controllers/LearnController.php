@@ -26,6 +26,11 @@ class LearnController extends Controller
     public function index($id_course, $id_topic)
     {
         $topic = DB::table('topics')->where('id', $id_topic)->first();
+        $cells = DB::table('spreadsheets')->where('id', $id_topic)->get();
+        $ranges = [];
+        foreach($cells as $cell) {
+            $ranges[] = 'Sheet1!' . $cell->cell;
+        }
         $content = $topic->content;
 
         $client = LearnController::getClient();
@@ -35,6 +40,14 @@ class LearnController extends Controller
         $response = $service->files->copy($topic->id_spreadsheet, $copy);
 
         $permission_response = LearnController::edit_permission($response->id);
+        
+        // Clear Answer
+        $requestBody = new \Google_Service_Sheets_BatchClearValuesRequest([
+            'ranges' => $ranges
+        ]);
+        
+        $service2 = new \Google_Service_Sheets($client);
+        $response2 = $service2->spreadsheets_values->batchClear($response->id, $requestBody);
 
         return view('learn', ['topic_name' => $topic->name, 'id_course' => $id_course, 'id_spreadsheet' => $response->id, 'content' => $content]);
     }
@@ -117,24 +130,6 @@ class LearnController extends Controller
         $topic = DB::table('topics')->where('id', $id_topic)->first();
         $cells = DB::table('spreadsheets')->where('id', $id_topic)->get();
 
-        // $data = [];
-        // foreach($cells as $cell) {
-        //     $data[] = ['range' => 'Sheet1!' . $cell->cell, 'majorDimension' => 'ROWS', 'values' => array(array($cell->value))]; 
-        // }
-
-        // $client = LearnController::getClient();
-        // $service = new \Google_Service_Sheets($client);
-
-        // $requestBody = new \Google_Service_Sheets_BatchUpdateValuesRequest([
-        //     "valueInputOption" => 'USER_ENTERED',
-        //     "data" => $data,
-        //     "includeValuesInResponse" => false,
-        //     "responseValueRenderOption" => 'FORMULA',
-        //     "responseDateTimeRenderOption" => 'SERIAL_NUMBER'
-        // ]);
-
-        // $response = $service->spreadsheets_values->batchUpdate($topic->id_spreadsheet, $requestBody);
-
         return view('edit', ['cells' => $cells, 'id_course' => $id_course, 'id_spreadsheet' => $topic->id_spreadsheet, 'topic' => $topic]);
     }
 
@@ -168,13 +163,6 @@ class LearnController extends Controller
                 $answers[] = strtoupper(strval(($response->values)[0][0]));
             }
         }
-
-        // Clear Answer
-        $requestBody = new \Google_Service_Sheets_BatchClearValuesRequest([
-            'ranges' => $cells
-        ]);
-
-        $response = $service->spreadsheets_values->batchClear($request->id_spreadsheet, $requestBody);
 
         // Save to Database
         DB::table('spreadsheets')->where('id',$id_topic)->delete();
