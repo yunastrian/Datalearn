@@ -21,5 +21,6 @@ Route::post('/course/enroll', 'CourseController@enroll')->name('course/enroll');
 Route::post('/course/{id_course}/learn/new', 'LearnController@new')->name('learn/new');
 Route::get('/course/{id_course}/learn/{id_topic}', 'LearnController@index')->name('learn');
 Route::get('/course/{id_course}/learn/{id_topic}/edit', 'LearnController@edit')->name('edit');
+Route::post('/course/{id_course}/learn/{id_topic}/delete', 'LearnController@delete')->name('learn/delete');
 Route::post('/course/{id_course}/learn/{id_topic}/edit/save', 'LearnController@save')->name('edit/save');
 Route::post('/course/{id_course}/learn/{id_topic}/submit', 'AutograderController@index')->name('autograder');

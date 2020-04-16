@@ -76,6 +76,20 @@ class LearnController extends Controller
     }
 
     /**
+     * Delete Topic.
+     *
+     * @return msg
+     */
+    public function delete($id_course, $id_topic)
+    {
+        DB::table('spreadsheets')->where('id', $id_topic)->delete();
+        DB::table('grades')->where('id_topic', $id_topic)->delete();
+        DB::table('topics')->where('id', $id_topic)->delete();
+        
+        return redirect()->route('course', ['id_course' => $id_course, 'msg' => 3]);
+    }
+
+    /**
      * Edit Permission.
      *
      * @return response
