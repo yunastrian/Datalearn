@@ -32,7 +32,7 @@
                 <div class="card-header">Profil</div>
                 <div class="card-body profile">
                     <img src="img/profile.jpg" style="width:120px;height:120px;" alt="No Picture"> <br/> <br/>
-                    <a id="name">{{ $profile->name }}</a> <br/>
+                    <a id="profile-name">{{ $profile->name }}</a> <br/>
                     <a id="email">{{ $profile->email }}</a> <br/>
                     <a id="role">{{ $role }}</a> <br/><br/>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
