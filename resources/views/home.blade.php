@@ -24,12 +24,19 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+    @elseif( request()->get('msg') == 4 )
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Kelas Berhasil Dihapus
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     @endif
 @endisset
     <div class="row justify-content">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Kelasku</div>
+                <div class="card-header"><b>Kelasku</b></div>
                 <div class="card-columns card-body">
                     @if( count($enrolled) == 0 )
                         Tidak ada kelas yang diikuti
@@ -81,7 +88,7 @@
         </div>
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header">Profil</div>
+                <div class="card-header"><b>Profil</b></div>
                 <div class="card-body profile">
                     <img src="img/profile.jpg" style="width:120px;height:120px;" alt="No Picture"> <br/> <br/>
                     <a id="profile-name">{{ $profile->name }}</a> <br/>
@@ -123,7 +130,7 @@
         <div class="py-4 row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Kelas Tersedia</div>
+                    <div class="card-header"><b>Kelas Tersedia</b></div>
                     <div class="card-body">
                         <div class="accordion" id="accordionCourses">
                             @foreach($courses as $index => $course)

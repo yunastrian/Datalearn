@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use LearnController;
 
 class CourseController extends Controller
 {
@@ -25,6 +26,7 @@ class CourseController extends Controller
      */
     public function index($id_course)
     {
+        $course = DB::table('courses')->where('id', $id_course)->first();
         $topics = DB::table('topics')->where('id_course', $id_course)->get();
         $enrolled_id = DB::table('user_course')->where('id_course', $id_course)->pluck('id_user');
 
@@ -53,7 +55,7 @@ class CourseController extends Controller
             }
         }
 
-        return view('course', ['scores' => $scores, 'topics' => $topics, 'students' => $students, 'teacher' => $teacher]);
+        return view('course', ['course' => $course, 'scores' => $scores, 'topics' => $topics, 'students' => $students, 'teacher' => $teacher]);
     }
 
     /**
@@ -73,6 +75,27 @@ class CourseController extends Controller
             'id_course' => $id
         ]);
         return redirect()->route('home', ['msg' => 2]);
+    }
+
+    /**
+     * delete course
+     *
+     * @return msg
+     */
+    public function delete($id_course)
+    {
+        $enrolled_id = DB::table('user_course')->where('id_course', $id_course)->pluck('id_user');
+        $topics = DB::table('courses')->where('id', $id_course)->get();
+        foreach($topics as $topic) {
+            DB::table('spreadsheets')->where('id', $topic->id)->delete();
+            DB::table('grades')->where('id_topic', $topic->id)->delete();
+            DB::table('topics')->where('id', $topic->id)->delete();
+        }
+
+        DB::table('user_course')->where('id_course', $id_course)->delete();
+        DB::table('courses')->where('id', $id_course)->delete();
+        
+        return redirect()->route('home', ['msg' => 4]);
     }
 
     /**

@@ -36,11 +36,11 @@
     <div class="row justify-content">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header"><b>Topik Materi</b></div>
+                <div class="card-header"><b>Kelas {{ $course->name }}</b></div>
+                @if( count($topics) == 0 )
+                    <div class="card-body">Tidak ada Materi</div>
+                @endif
                 <div class="accordion-group" id="accordionTopics">
-                    @if( count($topics) == 0 )
-                        Tidak ada Materi
-                    @endif
                     @foreach($topics as $index => $topic)
                         <div class="card">
                             <div class="card-header" id="heading<?php echo $topic->id; ?>">
@@ -54,9 +54,7 @@
                                 <div class="card-body">
                                     {{ $topic->description }} <br/><br/>
                                     @if(Auth::user()->role == 1)
-                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $topic->id }}">
-                                                Hapus Materi
-                                        </button>
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $topic->id }}">Hapus</button>
                                         <a href="<?php echo $topic->id_course; ?>/learn/<?php echo $topic->id; ?>/edit" class="btn btn-primary" role="button">Edit Materi</a>
                                         <div class="modal fade" id="deleteModal{{ $topic->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -89,6 +87,29 @@
             </div>
             @if(Auth::user()->role == 1)
                 <br/>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteCourse">
+                    Hapus Kelas
+                </button>
+                <div class="modal fade" id="deleteCourse" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <form action="{{ $course->id }}/delete" method="post">
+                                {{ csrf_field() }}
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalCenterTitle">Hapus Kelas</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">Apakah anda yakin menghapus kelas <b>{{ $course->name }}</b>?</div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-danger">Hapus Kelas</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <button style="float: right;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
                     Tambah Materi
                 </button>
