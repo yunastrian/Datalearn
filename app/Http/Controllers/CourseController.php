@@ -38,8 +38,22 @@ class CourseController extends Controller
                 $students[] = $temp->name;
             }
         }
-        
-        return view('course', ['topics' => $topics, 'students' => $students, 'teacher' => $teacher]);
+
+        $scores = [];
+        foreach($topics as $topic) {
+            $grades = DB::table('grades')->where([
+                ['id_topic', '=' ,$topic->id], 
+                ['id_user', '=', Auth::id()]            
+            ])->first();
+            
+            if (empty($grades)) {
+                $scores[] = '-';
+            } else {
+                $scores[] = $grades->grade;
+            }
+        }
+
+        return view('course', ['scores' => $scores, 'topics' => $topics, 'students' => $students, 'teacher' => $teacher]);
     }
 
     /**

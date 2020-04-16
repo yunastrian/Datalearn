@@ -96,9 +96,22 @@
                 <div class="card">
                     <div class="card-header">Progress</div>
                     <div class="card-body">
-                        @foreach($topics as $index => $topic)
-                            Topik {{ $index + 1 }}: 100/100 <br/>
-                        @endforeach
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                <th scope="col">Materi</th>
+                                <th scope="col">Skor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($scores as $index => $score)
+                                <tr>
+                                <td>Materi {{ $index + 1 }}</td>
+                                <td>{{ $score }}</td>
+                                </tr>    
+                            @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <br/>

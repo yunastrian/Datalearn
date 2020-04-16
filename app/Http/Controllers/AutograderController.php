@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Google_Client;
 
 class AutograderController extends Controller
@@ -40,18 +41,21 @@ class AutograderController extends Controller
         $results = AutograderController::grade($keys, $answers);
 
         echo '
-        <table class="table">
+        <table class="table table-hover">
             <thead>
                 <tr>
-                <th scope="col">Cell</th>
-                <th scope="col">Kunci</th>
-                <th scope="col">Jawaban</th>
-                <th scope="col">Skor</th>
+                    <th scope="col">Cell</th>
+                    <th scope="col">Kunci</th>
+                    <th scope="col">Jawaban</th>
+                    <th scope="col">Skor</th>
                 </tr>
             </thead>
             <tbody>             
         ';
+
+        $score = 0;
         for ($i=0; $i<count($results); $i++) {
+            $score = $score + $results[$i]*100;
             echo '<tr>';
             echo '<th>' . $cells_temp[$i] . '</th>';
             echo '<td>' . $keys[$i] . '</td>';
@@ -60,10 +64,28 @@ class AutograderController extends Controller
             echo '</tr>';
         }
         echo '
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <th class="table-primary">Skor Akhir</th>
+                        <th class="table-primary">' . $score/count($results) . '</th>
+                    </tr>
                 </tbody>
             </table>
-            <a href="/course/ ' . $id_course . '" style="float: right;" class="btn btn-primary" role="button">Kembali ke Kelas</a>
+            <a href="/course/' . $id_course . '" style="float: right;" class="btn btn-primary" role="button">Kembali ke Kelas</a>
         ';
+
+        DB::table('grades')->where([
+            ['id_topic', '=' ,$id_topic], 
+            ['id_user', '=', Auth::id()]            
+        ])->delete();
+
+        DB::table('grades')->insert([
+            'id_course' => $id_course,
+            'id_user' => Auth::id(),
+            'id_topic' => $id_topic,
+            'grade' => $score/count($results)
+        ]);
     }
 
     /**
