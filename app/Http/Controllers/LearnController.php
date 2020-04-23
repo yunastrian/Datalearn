@@ -148,7 +148,7 @@ class LearnController extends Controller
         $client = LearnController::getClient();
         $service = new \Google_Service_Sheets($client);
 
-        // Get Answer
+        // Get Answer Formula
         $responses = $service->spreadsheets_values->batchGet($request->id_spreadsheet, [
             'valueRenderOption' => 'FORMULA',
             'dateTimeRenderOption' => 'SERIAL_NUMBER',
@@ -164,13 +164,30 @@ class LearnController extends Controller
             }
         }
 
+        // Get Answer Value
+        $responses2 = $service->spreadsheets_values->batchGet($request->id_spreadsheet, [
+            'valueRenderOption' => 'FORMATTED_VALUE',
+            'dateTimeRenderOption' => 'SERIAL_NUMBER',
+            'ranges' => $cells
+        ]);
+
+        $answers2 = [];
+        foreach ($responses2->valueRanges as $response) {
+            if ($response->values == NULL) {
+                $answers2[] = NULL;
+            } else {
+                $answers2[] = strtoupper(strval(($response->values)[0][0]));
+            }
+        }
+
         // Save to Database
         DB::table('spreadsheets')->where('id',$id_topic)->delete();
         for ($i=0; $i<count($answers); $i++) {
             DB::table('spreadsheets')->insert([
                 'id' => $id_topic,
                 'cell' => $cells[$i],
-                'value' => $answers[$i]
+                'value' => $answers2[$i],
+                'formula' => $answers[$i]
             ]);   
         }
 

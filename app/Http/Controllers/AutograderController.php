@@ -29,24 +29,34 @@ class AutograderController extends Controller
         $answer_keys = DB::table('spreadsheets')->where('id', $id_topic)->get();
         $cells = [];
         $cells_temp = [];
-        $keys = [];
+        $keys_formula = [];
+        $keys_value = [];
         foreach($answer_keys as $answer_key) {
             $cells[] = 'Sheet1!' . $answer_key->cell;
             $cells_temp[] = $answer_key->cell;
-            $keys[] = $answer_key->value;
+            $keys_formula[] = $answer_key->formula;
+            $keys_value[] = $answer_key->value;
         }
 
-        $answers = AutograderController::getStudentAnswer($request->id_spreadsheet, $cells);
+        $answers_formula = AutograderController::getStudentAnswer($request->id_spreadsheet, $cells, 0);
+        $answers_value = AutograderController::getStudentAnswer($request->id_spreadsheet, $cells, 1);
         
-        $results = AutograderController::grade($keys, $answers);
+        $results_formula = AutograderController::gradeFormula($keys_formula, $answers_formula);
+        $results_value = AutograderController::gradeFormula($keys_value, $answers_value);
+        $results = [];
+        for ($i=0; $i<count($results_formula); $i++) {
+            $results[] = ($results_formula[$i] + $results_value[$i])/2;
+        }
 
         echo '
         <table class="table table-hover">
             <thead>
                 <tr>
                     <th scope="col">Cell</th>
-                    <th scope="col">Kunci</th>
-                    <th scope="col">Jawaban</th>
+                    <th scope="col">Formula Kunci</th>
+                    <th scope="col">Formula Jawaban</th>
+                    <th scope="col">Nilai Kunci</th>
+                    <th scope="col">Nilai Jawaban</th>
                     <th scope="col">Skor</th>
                 </tr>
             </thead>
@@ -58,13 +68,17 @@ class AutograderController extends Controller
             $score = $score + $results[$i]*100;
             echo '<tr>';
             echo '<th>' . $cells_temp[$i] . '</th>';
-            echo '<td>' . $keys[$i] . '</td>';
-            echo '<td>' . $answers[$i] . '</td>';
+            echo '<td>' . $keys_formula[$i] . '</td>';
+            echo '<td>' . $answers_formula[$i] . '</td>';
+            echo '<td>' . $keys_value[$i] . '</td>';
+            echo '<td>' . $answers_value[$i] . '</td>';
             echo '<td>' . $results[$i]*100 . '/100</td>';
             echo '</tr>';
         }
         echo '
                     <tr>
+                        <td></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <th class="table-primary">Skor Akhir</th>
@@ -89,11 +103,30 @@ class AutograderController extends Controller
     }
 
     /**
-     * Get grade from answer.
+     * Get grade from answer value
      *
      * @return grades
      */
-    public function grade($keys, $answers) 
+    public function gradeValue($keys, $answers) 
+    {
+        $results = [];
+        for($i=0; $i<count($keys); $i++) {
+            if ($keys[$i] == $answers[$i]) {
+                $results[] = 1;
+            } else {
+                $results[] = 0;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get grade from answer formula
+     *
+     * @return grades
+     */
+    public function gradeFormula($keys, $answers) 
     {
         $results = [];
         for($i=0; $i<count($keys); $i++) {
@@ -121,7 +154,7 @@ class AutograderController extends Controller
     }
 
     /**
-     * Get Jaccard Index score.
+     * Get Jaccard Index score
      *
      * @return score
      */
@@ -134,11 +167,11 @@ class AutograderController extends Controller
     }
 
     /**
-     * Get data from spreadsheet.
+     * Get data from spreadsheet
      *
      * @return answer
      */
-    public function getStudentAnswer($id_spreadsheet, $ranges) 
+    public function getStudentAnswer($id_spreadsheet, $ranges, $type) 
     {
         $client = new Google_Client();
         $client->setApplicationName('Datalearn');
@@ -147,9 +180,13 @@ class AutograderController extends Controller
         $client->setAccessType('offline');
 
         $service = new \Google_Service_Sheets($client);
- 
+        
+        $render = 'FORMULA';
+        if ($type == 1) {
+            $render = 'FORMATTED_VALUE';
+        }
         $responses = $service->spreadsheets_values->batchGet($id_spreadsheet, [
-            'valueRenderOption' => 'FORMULA',
+            'valueRenderOption' => $render,
             'dateTimeRenderOption' => 'SERIAL_NUMBER',
             'ranges' => $ranges
         ]);
