@@ -40,15 +40,15 @@ class HomeController extends Controller
             $enrolled[] = DB::table('courses')->where('id', $id)->first();
         }
 
-        foreach($courses as $course) {
-            $temp = DB::table('user_course')->where([
-                ['id_course', '=', $course->id],
-                ['role', '=', 1]
-            ])->first();
-            $teacher = DB::table('users')->where('id', $temp->id_user)->first();
-            $teachers[] = $teacher->name;
-        }
+        return view('home', ['profile' => $profile, 'role' => $role, 'courses' => $courses, 'enrolled' => $enrolled]);
+    }
 
-        return view('home', ['profile' => $profile, 'role' => $role, 'courses' => $courses, 'teachers' => $teachers, 'enrolled' => $enrolled]);
+    public function profile(Request $request)
+    {
+        DB::table('users')->where('id', Auth::id())->update([
+            'name' => $request->new_name,
+        ]);
+        
+        return redirect()->route('home', ['msg' => 1]);
     }
 }

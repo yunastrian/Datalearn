@@ -17,6 +17,7 @@ class CreateTopicsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('id_course')->unsigned();
             $table->string('name');
+            $table->longText('description');
             $table->longText('content');
             $table->string('id_spreadsheet');
 

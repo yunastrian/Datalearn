@@ -17,7 +17,7 @@ class CreateSpreadsheetsTable extends Migration
             $table->bigInteger('id')->unsigned();
             $table->string('cell');
             $table->string('value');
-            $table->integer('type');
+            $table->string('formula');
 
             $table->primary(['id', 'cell']);
             $table->foreign('id')->references('id')->on('topics');

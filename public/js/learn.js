@@ -1,5 +1,6 @@
 function submit(id_spreadsheet, url) {
     document.getElementById("submit").disabled = true;
+    document.getElementById("back").disabled = true;
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {

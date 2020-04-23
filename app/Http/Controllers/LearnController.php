@@ -26,6 +26,11 @@ class LearnController extends Controller
     public function index($id_course, $id_topic)
     {
         $topic = DB::table('topics')->where('id', $id_topic)->first();
+        $cells = DB::table('spreadsheets')->where('id', $id_topic)->get();
+        $ranges = [];
+        foreach($cells as $cell) {
+            $ranges[] = 'Sheet1!' . $cell->cell;
+        }
         $content = $topic->content;
 
         $client = LearnController::getClient();
@@ -35,8 +40,16 @@ class LearnController extends Controller
         $response = $service->files->copy($topic->id_spreadsheet, $copy);
 
         $permission_response = LearnController::edit_permission($response->id);
+        
+        // Clear Answer
+        $requestBody = new \Google_Service_Sheets_BatchClearValuesRequest([
+            'ranges' => $ranges
+        ]);
+        
+        $service2 = new \Google_Service_Sheets($client);
+        $response2 = $service2->spreadsheets_values->batchClear($response->id, $requestBody);
 
-        return view('learn', ['id_spreadsheet' => $response->id, 'content' => $content]);
+        return view('learn', ['topic_name' => $topic->name, 'id_course' => $id_course, 'id_spreadsheet' => $response->id, 'content' => $content]);
     }
 
     /**
@@ -67,11 +80,26 @@ class LearnController extends Controller
             DB::table('topics')->insert([
                 'id_course' => $id_course,
                 'name' => $request->topic_name,
-                'content' => 'Konten',
+                'description' => $request->topic_description,
+                'content' => '',
                 'id_spreadsheet' => $response->spreadsheetId
             ]);
         }
         return redirect()->route('course', ['id_course' => $id_course, 'msg' => $msg]);
+    }
+
+    /**
+     * Delete Topic.
+     *
+     * @return msg
+     */
+    public function delete($id_course, $id_topic)
+    {
+        DB::table('spreadsheets')->where('id', $id_topic)->delete();
+        DB::table('grades')->where('id_topic', $id_topic)->delete();
+        DB::table('topics')->where('id', $id_topic)->delete();
+        
+        return redirect()->route('course', ['id_course' => $id_course, 'msg' => 3]);
     }
 
     /**
@@ -100,7 +128,9 @@ class LearnController extends Controller
     public function edit($id_course, $id_topic)
     {
         $topic = DB::table('topics')->where('id', $id_topic)->first();
-        return view('edit', ['id_spreadsheet' => $topic->id_spreadsheet, 'topic' => $topic]);
+        $cells = DB::table('spreadsheets')->where('id', $id_topic)->get();
+
+        return view('edit', ['cells' => $cells, 'id_course' => $id_course, 'id_spreadsheet' => $topic->id_spreadsheet, 'topic' => $topic]);
     }
 
     /**
@@ -118,7 +148,7 @@ class LearnController extends Controller
         $client = LearnController::getClient();
         $service = new \Google_Service_Sheets($client);
 
-        // Get Answer
+        // Get Answer Formula
         $responses = $service->spreadsheets_values->batchGet($request->id_spreadsheet, [
             'valueRenderOption' => 'FORMULA',
             'dateTimeRenderOption' => 'SERIAL_NUMBER',
@@ -134,12 +164,21 @@ class LearnController extends Controller
             }
         }
 
-        // Clear Answer
-        $requestBody = new \Google_Service_Sheets_BatchClearValuesRequest([
+        // Get Answer Value
+        $responses2 = $service->spreadsheets_values->batchGet($request->id_spreadsheet, [
+            'valueRenderOption' => 'FORMATTED_VALUE',
+            'dateTimeRenderOption' => 'SERIAL_NUMBER',
             'ranges' => $cells
         ]);
 
-        $response = $service->spreadsheets_values->batchClear($request->id_spreadsheet, $requestBody);
+        $answers2 = [];
+        foreach ($responses2->valueRanges as $response) {
+            if ($response->values == NULL) {
+                $answers2[] = NULL;
+            } else {
+                $answers2[] = strtoupper(strval(($response->values)[0][0]));
+            }
+        }
 
         // Save to Database
         DB::table('spreadsheets')->where('id',$id_topic)->delete();
@@ -147,8 +186,8 @@ class LearnController extends Controller
             DB::table('spreadsheets')->insert([
                 'id' => $id_topic,
                 'cell' => $cells[$i],
-                'value' => $answers[$i],
-                'type' => 0
+                'value' => $answers2[$i],
+                'formula' => $answers[$i]
             ]);   
         }
 

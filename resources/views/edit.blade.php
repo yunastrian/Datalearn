@@ -31,7 +31,7 @@
                         </div>
                         <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#accordionCourses">
                             <input type="hidden" value="<?php echo $id_spreadsheet; ?>" class="form-control" name="id_spreadsheet" id="id_spreadsheet">
-                            <textarea name="rich_text" id="rich_text"><?php echo $topic->content;?></textarea>
+                            <mytextarea name="rich_text" id="rich_text"><?php echo $topic->content;?></mytextarea>
                         </div>
                     </div>
                     <div class="card">
@@ -45,29 +45,20 @@
                         <div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#accordionCourses">
                             <div class="card-body">
                                 <label for="exampleFormControlSelect1">Jumlah Cell Jawaban</label>
-                                <input type="number" class="form-control" id="cell-number" min="1" value="5" onkeyup="setForm(this.value)" onchange="setForm(this.value)">
+                                <input type="number" class="form-control" id="cell-number" min="1" value="{{ count($cells) }}" onkeyup="setForm(this.value)" onchange="setForm(this.value)">
                                 <br/>
                                 <label for="exampleFormControlSelect1">Masukkan Cell Jawaban</label>
                                 <div class="row" id="cell-answers">
-                                    <div class="col-3" style="margin-bottom:1rem;">
-                                        <input type="text" name="cells[]" class="form-control">
-                                    </div>
-                                    <div class="col-3" style="margin-bottom:1rem;">
-                                        <input type="text" name="cells[]" class="form-control">
-                                    </div>
-                                    <div class="col-3" style="margin-bottom:1rem;">
-                                        <input type="text" name="cells[]" class="form-control">
-                                    </div>
-                                    <div class="col-3" style="margin-bottom:1rem;">
-                                        <input type="text" name="cells[]" class="form-control">
-                                    </div>
-                                    <div class="col-3" style="margin-bottom:1rem;">
-                                        <input type="text" name="cells[]" class="form-control">
-                                    </div>
+                                    @foreach($cells as $cell)
+                                        <div class="col-3" style="margin-bottom:1rem;">
+                                            <input type="text" name="cells[]" class="form-control" value="{{ $cell->cell }}">
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <a style="margin-top: 1rem;" href="/course/<?php echo $id_course; ?>" class="btn btn-secondary" role="button">Kembali ke Kelas</a>
                     <button style="float: right; margin-top: 1rem;" type="submit" class="btn btn-primary"><b>Simpan</b></button>
                 </form>
             </div>
