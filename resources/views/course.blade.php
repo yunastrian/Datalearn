@@ -31,6 +31,13 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+    @elseif( request()->get('msg') == 5 )
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Nama Kelas Berhasil Diubah
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     @else
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             Pembuatan Materi Gagal
@@ -142,6 +149,34 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                                     <button type="submit" class="btn btn-danger">Hapus Kelas</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#nameCourse">
+                    Edit Nama Kelas
+                </button>
+                <div class="modal fade" id="nameCourse" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <form action="{{ $course->id }}/edit" method="post">
+                                {{ csrf_field() }}
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalCenterTitle">Edit Nama Kelas</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="topic-name" class="col-form-label">Nama Kelas</label>
+                                        <input type="text" class="form-control" name="course_name" id="course-name" required="required" value="{{ $course->name }}">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </form>
                         </div>

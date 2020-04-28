@@ -21,6 +21,7 @@ Route::post('/course/{id_course}/edit_topic/{id_topic}', 'CourseController@editT
 Route::post('/course/new', 'CourseController@new')->name('course/new');
 Route::post('/course/enroll', 'CourseController@enroll')->name('course/enroll');
 Route::post('/course/{id_course}/delete', 'CourseController@delete')->name('course/delete');
+Route::post('/course/{id_course}/edit', 'CourseController@edit')->name('course/edit');
 Route::post('/course/{id_course}/learn/new', 'LearnController@new')->name('learn/new');
 Route::get('/course/{id_course}/learn/{id_topic}', 'LearnController@index')->name('learn');
 Route::get('/course/{id_course}/learn/{id_topic}/edit', 'LearnController@edit')->name('edit');

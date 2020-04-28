@@ -77,6 +77,20 @@ class CourseController extends Controller
     }
 
     /**
+     * Edit course name
+     *
+     * @return newCourse
+     */
+    public function edit($id_course, Request $request)
+    {
+        DB::table('courses')->where('id', $id_course)->update([
+            'name' => $request->course_name,
+        ]);
+
+        return redirect()->route('course', ['id_course' => $id_course, 'msg' => 5]);
+    }
+
+    /**
      * delete course
      *
      * @return msg
@@ -111,6 +125,11 @@ class CourseController extends Controller
         return redirect()->route('home', ['msg' => 3]);
     }
 
+    /**
+     * Edit Topic
+     *
+     * @return msg
+     */
     public function editTopic($id_course, $id_topic, Request $request) {
         DB::table('topics')->where('id', $id_topic)->update([
             'name' => $request->topic_name,
