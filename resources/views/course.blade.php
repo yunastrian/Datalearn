@@ -24,6 +24,13 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+    @elseif( request()->get('msg') == 4 )
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Deskripsi Materi Berhasil Diubah
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     @else
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             Pembuatan Materi Gagal
@@ -55,7 +62,8 @@
                                     {{ $topic->description }} <br/><br/>
                                     @if(Auth::user()->role == 1)
                                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $topic->id }}">Hapus</button>
-                                        <a href="<?php echo $topic->id_course; ?>/learn/<?php echo $topic->id; ?>/edit" class="btn btn-primary" role="button">Edit Materi</a>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal{{ $topic->id }}">Edit Deskripsi</button>
+                                        <a style="float: right;" href="<?php echo $topic->id_course; ?>/learn/<?php echo $topic->id; ?>/edit" class="btn btn-primary" role="button">Isi Konten</a>
                                         <div class="modal fade" id="deleteModal{{ $topic->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
@@ -71,6 +79,35 @@
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                                                             <button type="submit" class="btn btn-danger">Hapus Materi</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" id="editModal{{ $topic->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <form action="<?php echo Request::url(); ?>/edit_topic/{{ $topic->id }}" method="post">
+                                                        {{ csrf_field() }}
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalCenterTitle">Edit Materi</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label for="topic-name" class="col-form-label">Edit Judul Materi</label>
+                                                                <input type="text" class="form-control" name="topic_name" id="topic-name" required="required" value="{{ $topic->name }}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="topic-description">Edit Deskripsi</label>
+                                                                <textarea class="form-control" name="topic_description" id="topic_description" rows="2">{{ $topic->description }}</textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                            <button type="submit" class="btn btn-primary">Submit</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -127,7 +164,7 @@
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="topic-name" class="col-form-label">Masukkan Judul Materi</label>
-                                        <input type="text" class="form-control" name="topic_name" id="topic-name" required="required" placeholder="Judul Topik">
+                                        <input type="text" class="form-control" name="topic_name" id="topic-name" required="required" placeholder="Judul Materi">
                                     </div>
                                     <div class="form-group">
                                         <label for="topic-description">Deskripsi</label>

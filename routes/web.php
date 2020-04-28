@@ -17,6 +17,7 @@ Route::post('/profile', 'HomeController@profile')->name('profile');
 Route::get('/edit_password', 'HomeController@editPassword')->name('edit_password');
 Route::post('/password', 'HomeController@password')->name('password');
 Route::get('/course/{id_course}', 'CourseController@index')->name('course');
+Route::post('/course/{id_course}/edit_topic/{id_topic}', 'CourseController@editTopic')->name('edit_topic');
 Route::post('/course/new', 'CourseController@new')->name('course/new');
 Route::post('/course/enroll', 'CourseController@enroll')->name('course/enroll');
 Route::post('/course/{id_course}/delete', 'CourseController@delete')->name('course/delete');

@@ -110,4 +110,13 @@ class CourseController extends Controller
         ]);
         return redirect()->route('home', ['msg' => 3]);
     }
+
+    public function editTopic($id_course, $id_topic, Request $request) {
+        DB::table('topics')->where('id', $id_topic)->update([
+            'name' => $request->topic_name,
+            'description' => $request->topic_description
+        ]);
+
+        return redirect()->route('course', ['id_course' => $id_course, 'msg' => 4]);
+    }
 }
