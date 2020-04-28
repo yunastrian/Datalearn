@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UpdatePasswordRequest;
 
 class HomeController extends Controller
 {
@@ -43,6 +45,16 @@ class HomeController extends Controller
         return view('home', ['profile' => $profile, 'role' => $role, 'courses' => $courses, 'enrolled' => $enrolled]);
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function editPassword()
+    {
+        return view('editPassword');
+    }
+
     public function profile(Request $request)
     {
         DB::table('users')->where('id', Auth::id())->update([
@@ -50,5 +62,18 @@ class HomeController extends Controller
         ]);
         
         return redirect()->route('home', ['msg' => 1]);
+    }
+
+    /**
+     * @param UpdatePasswordRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function password(UpdatePasswordRequest $request)
+    {
+        DB::table('users')->where('id', Auth::id())->update([
+            'password' => Hash::make($request->get('password'))
+        ]);
+
+        return redirect()->route('home', ['msg' => 5]);
     }
 }
