@@ -147,23 +147,60 @@ class AutograderController extends Controller
                 }
             }
 
-            $results[] = AutograderController::jaccardIndex($key, $answer);
+            $results[] = AutograderController::cosine($key, $answer);
         }
 
         return $results;
     }
 
     /**
-     * Get Jaccard Index score
+     * Get Cosine Similarity
      *
      * @return score
      */
-    public function jaccardIndex($key, $answer) {
-        $arr_intersection = count(array_intersect( $key, $answer ));
-        $arr_union = count(array_merge( $key, $answer )) - $arr_intersection;
-        $jaccard_index = $arr_intersection / $arr_union;
+    public function cosine($key, $answer) {
+        $token = [];
+        $vector1 = [];
+        $vector2 = [];
+        foreach($key as $k) {
+            if (!in_array($k, $token)) {
+                $token[] = $k;
+                $vector1[] = 0;
+                $vector2[] = 0;
+            }
+        }
 
-        return $jaccard_index;
+        foreach($answer as $k) {
+            if (!in_array($k, $token)) {
+                $token[] = $k;
+                $vector1[] = 0;
+                $vector2[] = 0;
+            }
+        }
+
+        foreach($key as $k) {
+            $vector1[array_search($k, $token)] += 1;
+        }
+        foreach($answer as $k) {
+            $vector2[array_search($k, $token)] += 1;
+        }
+
+        $dot_product = 0;
+        for($i=0; $i<count($token); $i++) {
+            $dot_product += ($vector1[$i])*($vector2[$i]);
+        }
+
+        $length1 = 0;
+        $length2 = 0;
+
+        for($i=0; $i<count($token); $i++) {
+            $length1 += pow($vector1[$i], 2);
+            $length2 += pow($vector2[$i], 2);
+        }
+
+        $similarity = $dot_product/sqrt($length1*$length2);
+        
+        return $similarity;
     }
 
     /**
