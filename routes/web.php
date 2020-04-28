@@ -14,6 +14,8 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 Route::redirect('/home', '/');
 Route::post('/profile', 'HomeController@profile')->name('profile');
+Route::get('/edit_password', 'HomeController@editPassword')->name('edit_password');
+Route::post('/password', 'HomeController@password')->name('password');
 Route::get('/course/{id_course}', 'CourseController@index')->name('course');
 Route::post('/course/new', 'CourseController@new')->name('course/new');
 Route::post('/course/enroll', 'CourseController@enroll')->name('course/enroll');

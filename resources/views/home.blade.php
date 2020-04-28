@@ -31,6 +31,13 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+    @elseif( request()->get('msg') == 5 )
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Password Berhasil Diubah
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     @endif
 @endisset
     <div class="row justify-content">
@@ -95,7 +102,7 @@
                     <a id="email">{{ $profile->email }}</a> <br/>
                     <a id="role">{{ $role }}</a> <br/><br/>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-                        Edit Profile
+                        Edit Profil
                     </button>
                     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -116,6 +123,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                        <a href="edit_password" class="btn btn-primary editpass" role="button">Ubah Password</a>
                                         <button type="submit" class="btn btn-primary">Submit</button>
                                     </div>
                                 </form>
@@ -131,27 +139,25 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header"><b>Kelas Tersedia</b></div>
-                    <div class="card-body">
-                        <div class="accordion" id="accordionCourses">
-                            @foreach($courses as $index => $course)
-                                <div class="card">
-                                    <div class="card-header" id="heading<?php echo $course->id; ?>" style="transform: rotate(0);">
-                                        <a class="stretched-link" type="button" data-toggle="collapse" data-target="#collapse<?php echo $course->id; ?>" aria-expanded="false" aria-controls="collapse<?php echo $course->id; ?>">{{ $course->name }}</a> 
-                                    </div>
+                    <div class="accordion" id="accordionCourses">
+                        @foreach($courses as $index => $course)
+                            <div class="card">
+                                <div class="card-header" id="heading<?php echo $course->id; ?>" style="transform: rotate(0);">
+                                    <a class="stretched-link" type="button" data-toggle="collapse" data-target="#collapse<?php echo $course->id; ?>" aria-expanded="false" aria-controls="collapse<?php echo $course->id; ?>">{{ $course->name }}</a> 
+                                </div>
 
-                                    <div id="collapse<?php echo $course->id; ?>" class="collapse" aria-labelledby="heading<?php echo $course->id; ?>" data-parent="#accordionCourses">
-                                        <div class="card-body">
-                                            {{ $course->description }} <br/><br/>
-                                            <form action="course/enroll" method="post">
-                                                {{ csrf_field() }}
-                                                <input style="display: none;" type="number" class="form-control" name="enroll_id" id="enroll_id" required="required" value="<?php echo $course->id ?>">
-                                                <button type="submit" class="btn btn-primary">Daftar Kelas</button>
-                                            </form>
-                                        </div>
+                                <div id="collapse<?php echo $course->id; ?>" class="collapse" aria-labelledby="heading<?php echo $course->id; ?>" data-parent="#accordionCourses">
+                                    <div class="card-body">
+                                        {{ $course->description }} <br/><br/>
+                                        <form action="course/enroll" method="post">
+                                            {{ csrf_field() }}
+                                            <input style="display: none;" type="number" class="form-control" name="enroll_id" id="enroll_id" required="required" value="<?php echo $course->id ?>">
+                                            <button type="submit" class="btn btn-primary">Daftar Kelas</button>
+                                        </form>
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
