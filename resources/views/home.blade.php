@@ -50,7 +50,7 @@
                     @endif
                     @foreach($enrolled as $enroll)
                         <div class="card course" style="width: 14rem">
-                            <img src="img/course1.png" class="card-img-top" alt="No Picture">
+                            <img src="img/course.png" class="card-img-top" alt="No Picture">
                             <div class="card-header">{{ $enroll->name }}</div>
                             <a href="/course/<?php echo $enroll->id; ?>" class="stretched-link"></a>
                         </div>
@@ -97,7 +97,7 @@
             <div class="card">
                 <div class="card-header"><b>Profil</b></div>
                 <div class="card-body profile">
-                    <img src="img/profile.jpg" style="width:120px;height:120px;" alt="No Picture"> <br/> <br/>
+                    <img src="img/{{ $image }}" style="width:120px;height:120px;" alt="No Picture"> <br/>
                     <a id="profile-name">{{ $profile->name }}</a> <br/>
                     <a id="email">{{ $profile->email }}</a> <br/>
                     <a id="role">{{ $role }}</a> <br/><br/>
