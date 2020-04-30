@@ -149,11 +149,15 @@
                                 <div id="collapse<?php echo $course->id; ?>" class="collapse" aria-labelledby="heading<?php echo $course->id; ?>" data-parent="#accordionCourses">
                                     <div class="card-body">
                                         {{ $course->description }} <br/><br/>
-                                        <form action="course/enroll" method="post">
-                                            {{ csrf_field() }}
-                                            <input style="display: none;" type="number" class="form-control" name="enroll_id" id="enroll_id" required="required" value="<?php echo $course->id ?>">
-                                            <button type="submit" class="btn btn-primary">Daftar Kelas</button>
-                                        </form>
+                                        @if( in_array($course, $enrolled) )
+                                        <a style="color:green;">Anda sudah mengikuti kelas ini</a>
+                                        @else
+                                            <form action="course/enroll" method="post">
+                                                {{ csrf_field() }}
+                                                <input style="display: none;" type="number" class="form-control" name="enroll_id" id="enroll_id" required="required" value="<?php echo $course->id ?>">
+                                                <button type="submit" class="btn btn-primary">Daftar Kelas</button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
