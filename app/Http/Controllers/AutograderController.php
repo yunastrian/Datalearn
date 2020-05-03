@@ -143,7 +143,45 @@ class AutograderController extends Controller
             $answer = [];
             for($j=0; $j<count($answer_temp); $j++) {
                 if (!empty($answer_temp[$j])) {
-                    $answer[] = $answer_temp[$j];
+                    $array = str_split($answer_temp[$j]);
+                    if (in_array(':', $array)) {
+                        $idx = strpos($answer_temp[$j], ":");
+                        
+                        $row_start_temp = '';
+                        $column_start = 0;
+                        for ($k=0; $k<$idx; $k++) {
+                            if ($k == 0) {
+                                $column_start = ord($array[$k]);
+                            } else {
+                                $row_start_temp .= $array[$k];
+                            }
+                        }
+                        $row_start = intval($row_start_temp);
+            
+                        $row_end_temp = '';
+                        $column_end = 0;
+                        for ($k=$idx+1; $k<count($array); $k++) {
+                            if ($k == $idx+1) {
+                                $column_end = ord($array[$k]);
+                            } else {
+                                $row_end_temp .= $array[$k];
+                            }
+                        }
+                        $row_end = intval($row_end_temp);
+            
+                        $new_arr = [];
+                        for ($k=$column_start; $k<=$column_end; $k++) {
+                            for ($l=$row_start; $l<=$row_end; $l++) {
+                                $new_arr[] = chr($k) . strval($l);
+                            }
+                        }
+    
+                        foreach($new_arr as $n) {
+                            $answer[] = $n;
+                        }
+                    } else {
+                        $answer[] = $answer_temp[$j];
+                    }
                 }
             }
 
@@ -159,48 +197,52 @@ class AutograderController extends Controller
      * @return score
      */
     public function cosine($key, $answer) {
-        $token = [];
-        $vector1 = [];
-        $vector2 = [];
-        foreach($key as $k) {
-            if (!in_array($k, $token)) {
-                $token[] = $k;
-                $vector1[] = 0;
-                $vector2[] = 0;
+        if (count($answer) == 0) {
+            return 0;
+        } else {
+            $token = [];
+            $vector1 = [];
+            $vector2 = [];
+            foreach($key as $k) {
+                if (!in_array($k, $token)) {
+                    $token[] = $k;
+                    $vector1[] = 0;
+                    $vector2[] = 0;
+                }
             }
-        }
 
-        foreach($answer as $k) {
-            if (!in_array($k, $token)) {
-                $token[] = $k;
-                $vector1[] = 0;
-                $vector2[] = 0;
+            foreach($answer as $k) {
+                if (!in_array($k, $token)) {
+                    $token[] = $k;
+                    $vector1[] = 0;
+                    $vector2[] = 0;
+                }
             }
-        }
 
-        foreach($key as $k) {
-            $vector1[array_search($k, $token)] += 1;
-        }
-        foreach($answer as $k) {
-            $vector2[array_search($k, $token)] += 1;
-        }
+            foreach($key as $k) {
+                $vector1[array_search($k, $token)] += 1;
+            }
+            foreach($answer as $k) {
+                $vector2[array_search($k, $token)] += 1;
+            }
 
-        $dot_product = 0;
-        for($i=0; $i<count($token); $i++) {
-            $dot_product += ($vector1[$i])*($vector2[$i]);
+            $dot_product = 0;
+            for($i=0; $i<count($token); $i++) {
+                $dot_product += ($vector1[$i])*($vector2[$i]);
+            }
+
+            $length1 = 0;
+            $length2 = 0;
+
+            for($i=0; $i<count($token); $i++) {
+                $length1 += pow($vector1[$i], 2);
+                $length2 += pow($vector2[$i], 2);
+            }
+
+            $similarity = $dot_product/sqrt($length1*$length2);
+            
+            return $similarity;
         }
-
-        $length1 = 0;
-        $length2 = 0;
-
-        for($i=0; $i<count($token); $i++) {
-            $length1 += pow($vector1[$i], 2);
-            $length2 += pow($vector2[$i], 2);
-        }
-
-        $similarity = $dot_product/sqrt($length1*$length2);
-        
-        return $similarity;
     }
 
     /**
