@@ -255,8 +255,10 @@
                     @foreach($students as $student)
                         {{ $student }} <br/>
                     @endforeach
-                    <br/>
-                    <a href="<?php echo $topic->id_course; ?>/grade" class="btn btn-primary" role="button">Lihat Nilai</a>
+                    @if(Auth::user()->role == 1)
+                        <br/>
+                        <a href="<?php echo $topic->id_course; ?>/grade" class="btn btn-primary" role="button">Lihat Nilai</a>
+                    @endif
                 </div>
             </div>
         </div>

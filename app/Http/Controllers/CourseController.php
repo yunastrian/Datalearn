@@ -145,6 +145,10 @@ class CourseController extends Controller
      * @return grade
      */
     public function grade($id_course) {
+        if (Auth::user()->role == 0) {
+            return redirect()->route('course', ['id_course' => $id_course, 'msg' => 6]);
+        }
+
         $enrolled_id = DB::table('user_course')->where('id_course', $id_course)->pluck('id_user');
 
         $topics = DB::table('topics')->where('id_course', $id_course)->get();
