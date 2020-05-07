@@ -1,10 +1,14 @@
 function submit(id_spreadsheet, url) {
     document.getElementById("submit").disabled = true;
+    document.getElementById("submit").style.display = "none";
     document.getElementById("back").disabled = true;
+    document.getElementById("loading").style.display = "block";
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             document.getElementById("result-detail").innerHTML = this.responseText;
+            document.getElementById("submit").style.display = "block";
+            document.getElementById("loading").style.display = "none";
             var x = document.getElementById("result");
             if (x.style.display === "none") {
                 x.style.display = "block";
