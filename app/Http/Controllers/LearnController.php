@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Google_Client;
 
 class LearnController extends Controller
@@ -25,6 +26,10 @@ class LearnController extends Controller
      */
     public function index($id_course, $id_topic)
     {
+        if (Auth::user()->role == 1) {
+            return redirect()->route('course', ['id_course' => $id_course, 'msg' => 6]);
+        }
+
         $topic = DB::table('topics')->where('id', $id_topic)->first();
         $cells = DB::table('spreadsheets')->where('id', $id_topic)->get();
         $ranges = [];
@@ -127,7 +132,24 @@ class LearnController extends Controller
      */
     public function edit($id_course, $id_topic)
     {
+        if (Auth::user()->role == 0) {
+            return redirect()->route('course', ['id_course' => $id_course, 'msg' => 6]);
+        }
+
+        $enrolled = DB::table('user_course')->where('id_user', Auth::id())->get();
+        
+        $flag = 0;
         $topic = DB::table('topics')->where('id', $id_topic)->first();
+        foreach($enrolled as $enroll) {
+            if ($enroll->id_course == $id_course and $topic->id_course == $enroll->id_course) {
+                $flag = 1;
+            }
+        }
+
+        if ($flag == 0) {
+            return redirect()->route('course', ['id_course' => $id_course, 'msg' => 6]);
+        }
+
         $cells = DB::table('spreadsheets')->where('id', $id_topic)->get();
 
         return view('edit', ['cells' => $cells, 'id_course' => $id_course, 'id_spreadsheet' => $topic->id_spreadsheet, 'topic' => $topic]);

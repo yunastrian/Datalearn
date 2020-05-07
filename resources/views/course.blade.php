@@ -38,6 +38,13 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+    @elseif( request()->get('msg') == 6 )
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            Akses Tidak Diperbolehkan
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     @else
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             Pembuatan Materi Gagal
