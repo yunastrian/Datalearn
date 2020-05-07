@@ -255,6 +255,8 @@
                     @foreach($students as $student)
                         {{ $student }} <br/>
                     @endforeach
+                    <br/>
+                    <a href="<?php echo $topic->id_course; ?>/grade" class="btn btn-primary" role="button">Lihat Nilai</a>
                 </div>
             </div>
         </div>

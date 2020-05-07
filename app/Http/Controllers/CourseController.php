@@ -138,4 +138,45 @@ class CourseController extends Controller
 
         return redirect()->route('course', ['id_course' => $id_course, 'msg' => 4]);
     }
+
+    /**
+     * Show grade
+     *
+     * @return grade
+     */
+    public function grade($id_course) {
+        $enrolled_id = DB::table('user_course')->where('id_course', $id_course)->pluck('id_user');
+
+        $topics = DB::table('topics')->where('id_course', $id_course)->get();
+        $name = [];
+        $ids = [];
+        $grades = [];
+        foreach($enrolled_id as $id) {
+            $user = DB::table('users')->where('id', $id)->first();
+
+            if ($user->role == 0) {
+                $name[] = $user->name;
+                $ids[] = $user->id;
+
+                $usergrade = [];
+                foreach($topics as $topic) {
+                    $grade = DB::table('grades')->where([
+                        ['id_course', '=' ,$id_course], 
+                        ['id_user', '=', $user->id],
+                        ['id_topic', '=', $topic->id]
+                    ])->first();
+
+                    if (empty($grade)) {
+                        $usergrade[] = '-';
+                    } else {
+                        $usergrade[] = $grade->grade;
+                    }
+                }
+
+                $grades[] = $usergrade;
+            }
+        }
+
+        return view('grade', ['topics' => $topics, 'names' => $name, 'grades' => $grades, 'id_course' => $id_course]);
+    }
 }
