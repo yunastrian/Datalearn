@@ -72,7 +72,7 @@ class AutograderController extends Controller
             echo '<td>' . $answers_formula[$i] . '</td>';
             echo '<td>' . $keys_value[$i] . '</td>';
             echo '<td>' . $answers_value[$i] . '</td>';
-            echo '<td>' . $results[$i]*100 . '/100</td>';
+            echo '<td>' . number_format($results[$i]*100, 2, '.', ''). '</td>';
             echo '</tr>';
         }
         echo '
@@ -82,7 +82,7 @@ class AutograderController extends Controller
                         <td></td>
                         <td></td>
                         <th class="table-primary">Skor Akhir</th>
-                        <th class="table-primary">' . $score/count($results) . '</th>
+                        <th class="table-primary">' . number_format($score/count($results), 2, '.', '') . '</th>
                     </tr>
                 </tbody>
             </table>
