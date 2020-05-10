@@ -257,7 +257,7 @@
                     @endforeach
                     @if(Auth::user()->role == 1)
                         <br/>
-                        <a href="<?php echo $topic->id_course; ?>/grade" class="btn btn-primary" role="button">Lihat Nilai</a>
+                        <a href="<?php echo $course->id; ?>/grade" class="btn btn-primary" role="button">Lihat Nilai</a>
                     @endif
                 </div>
             </div>
