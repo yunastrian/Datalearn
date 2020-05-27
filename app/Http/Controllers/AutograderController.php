@@ -133,6 +133,15 @@ class AutograderController extends Controller
             $key_temp = preg_split("/[)\s,(-]+/", $keys[$i]);
             $answer_temp = preg_split("/[)\s,(-]+/", $answers[$i]);
 
+            $flag = 0;
+            $range_func = array("COUNTBLANK", "MDETERM", "MINVERSE", "SUMPRODUCT", "TRANSPOSE", "COLUMNS", "ROWS");
+            foreach($range_func as $func) {
+                if (in_array('=' . $func, $answer_temp)) {
+                    $flag = 1;
+                    break;
+                }
+            }
+
             $key = [];
             for($j=0; $j<count($key_temp); $j++) {
                 if (!empty($key_temp[$j])) {
@@ -145,39 +154,43 @@ class AutograderController extends Controller
                 if (!empty($answer_temp[$j])) {
                     $array = str_split($answer_temp[$j]);
                     if (in_array(':', $array)) {
-                        $idx = strpos($answer_temp[$j], ":");
-                        
-                        $row_start_temp = '';
-                        $column_start = 0;
-                        for ($k=0; $k<$idx; $k++) {
-                            if ($k == 0) {
-                                $column_start = ord($array[$k]);
-                            } else {
-                                $row_start_temp .= $array[$k];
+                        if ($flag == 0) {
+                            $idx = strpos($answer_temp[$j], ":");
+                            
+                            $row_start_temp = '';
+                            $column_start = 0;
+                            for ($k=0; $k<$idx; $k++) {
+                                if ($k == 0) {
+                                    $column_start = ord($array[$k]);
+                                } else {
+                                    $row_start_temp .= $array[$k];
+                                }
                             }
-                        }
-                        $row_start = intval($row_start_temp);
-            
-                        $row_end_temp = '';
-                        $column_end = 0;
-                        for ($k=$idx+1; $k<count($array); $k++) {
-                            if ($k == $idx+1) {
-                                $column_end = ord($array[$k]);
-                            } else {
-                                $row_end_temp .= $array[$k];
+                            $row_start = intval($row_start_temp);
+                
+                            $row_end_temp = '';
+                            $column_end = 0;
+                            for ($k=$idx+1; $k<count($array); $k++) {
+                                if ($k == $idx+1) {
+                                    $column_end = ord($array[$k]);
+                                } else {
+                                    $row_end_temp .= $array[$k];
+                                }
                             }
-                        }
-                        $row_end = intval($row_end_temp);
-            
-                        $new_arr = [];
-                        for ($k=$column_start; $k<=$column_end; $k++) {
-                            for ($l=$row_start; $l<=$row_end; $l++) {
-                                $new_arr[] = chr($k) . strval($l);
+                            $row_end = intval($row_end_temp);
+                
+                            $new_arr = [];
+                            for ($k=$column_start; $k<=$column_end; $k++) {
+                                for ($l=$row_start; $l<=$row_end; $l++) {
+                                    $new_arr[] = chr($k) . strval($l);
+                                }
                             }
-                        }
-    
-                        foreach($new_arr as $n) {
-                            $answer[] = $n;
+        
+                            foreach($new_arr as $n) {
+                                $answer[] = $n;
+                            }
+                        } else {
+                            $answer[] = $answer_temp[$j];
                         }
                     } else {
                         $answer[] = $answer_temp[$j];

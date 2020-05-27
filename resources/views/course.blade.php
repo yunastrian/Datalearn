@@ -226,7 +226,7 @@
         <div class="col-md-4">
             @if(Auth::user()->role == 0)
                 <div class="card">
-                    <div class="card-header"><b>Progress</b></div>
+                    <div class="card-header bg-primary text-white"><b>Progress</b></div>
                     <div class="card-body">
                         <table class="table table-hover">
                             <thead>
