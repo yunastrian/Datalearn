@@ -57,7 +57,7 @@
     <div class="row justify-content">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header"><b>Kelas {{ $course->name }}</b></div>
+                <div class="card-header bg-primary text-white"><b>Kelas {{ $course->name }}</b></div>
                 @if( count($topics) == 0 )
                     <div class="card-body">Tidak ada Materi</div>
                 @endif
@@ -249,7 +249,7 @@
                 <br/>
             @endif
             <div class="card">
-                <div class="card-header"><b>Peserta Kelas</b></div>
+                <div class="card-header bg-primary text-white"><b>Peserta Kelas</b></div>
                 <div class="card-body">
                     {{ $teacher }} (Pengajar) <br/>
                     @foreach($students as $student)

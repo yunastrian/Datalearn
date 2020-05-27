@@ -43,7 +43,7 @@
     <div class="row justify-content">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header"><b>Kelasku</b></div>
+                <div class="card-header bg-primary text-white"><b>Kelasku</b></div>
                 <div class="card-columns card-body">
                     @if( count($enrolled) == 0 )
                         Tidak ada kelas yang diikuti
@@ -95,7 +95,7 @@
         </div>
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header"><b>Profil</b></div>
+                <div class="card-header bg-primary text-white"><b>Profil</b></div>
                 <div class="card-body profile">
                     <img src="img/{{ $image }}" style="width:120px;height:120px;" alt="No Picture"> <br/>
                     <a id="profile-name">{{ $profile->name }}</a> <br/>
@@ -138,7 +138,7 @@
         <div class="py-4 row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header"><b>Kelas Tersedia</b></div>
+                    <div class="card-header bg-primary text-white"><b>Kelas Tersedia</b></div>
                     <div class="accordion" id="accordionCourses">
                         @foreach($courses as $index => $course)
                             <div class="card">
