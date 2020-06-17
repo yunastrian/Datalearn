@@ -42,7 +42,7 @@ class AutograderController extends Controller
         $answers_value = AutograderController::getStudentAnswer($request->id_spreadsheet, $cells, 1);
         
         $results_formula = AutograderController::gradeFormula($keys_formula, $answers_formula);
-        $results_value = AutograderController::gradeFormula($keys_value, $answers_value);
+        $results_value = AutograderController::gradeValue($keys_value, $answers_value);
         $results = [];
         for ($i=0; $i<count($results_formula); $i++) {
             $results[] = ($results_formula[$i] + $results_value[$i])/2;
