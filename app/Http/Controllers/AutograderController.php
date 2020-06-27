@@ -45,7 +45,7 @@ class AutograderController extends Controller
         $results_value = AutograderController::gradeValue($keys_value, $answers_value);
         $results = [];
         for ($i=0; $i<count($results_formula); $i++) {
-            $results[] = ($results_formula[$i] + $results_value[$i])/2;
+            $results[] = $results_formula[$i]*0.8 + $results_value[$i]*0.2;
         }
 
         echo '
