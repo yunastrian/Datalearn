@@ -13,7 +13,7 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/text.js') }}" defer></script>
     <script src="{{ asset('js/learn.js') }}" defer></script>
-    <script src="https://cdn.tiny.cloud/1/yaezxtmh9h1roazzxnkx70is63n62nbov3xskxim3rpnbcoj/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/<API KEY>/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <script>tinymce.init({selector:'mytextarea'});</script>
 
     <!-- Fonts -->

@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-4">
             <div class="card">
-                <div class="card-header bg-primary text-white">{{ $topic_name }}</div>
+                <div class="card-header bg-primary text-white"><b>{{ $topic_name }}</b></div>
                 <div class="card-body">
                     <?php echo $content;?>
                 </div>
