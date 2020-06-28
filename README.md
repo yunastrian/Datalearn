@@ -1,78 +1,90 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# Datalearn
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Datalearn is simple LMS with spreadsheet and autograder tools. It uses Google Spreadsheet with Sheets and Drive API. This application is developed for my final project.
 
-## About Laravel
+## Tech Stack
+- Framework used is **Laravel 6.18.3** with **PHP 7**
+- Database used is **MySQL**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Requirements
+- PHP 7.4 or newer
+- MySQL 10.4.11-MariaDB or newer
+- Composer 1.9.3 or newer
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
+1. Make a copy `.env.example` and change its name to `.env`
+2. Customize `.env` file with your configuration
+3. Create a new database with the same name as defined in `.env` file
+4. Run these commands in terminal
+```
+composer install
+composer update
+php artisan storage:link
+php artisan key:generate
+php artisan config:cache
+php artisan migrate
+```
+5. The application uses Google Spreadsheet. Configure the Google Service Account to use it
+6. This application uses TinyMCE. Configure it
+7. There are problems with the libraries. Fix it
+8. Congratulation, the application has been successfully installed. Run the application with this command
+```
+php artisan serve
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Configure Google Service Account
+1. Open [Google API Console](https://console.developers.google.com)
+2. Go to **Credentials tab** and open **CREATE CREDENTIALS --> Service Account**
+3. Fill the forms in first step. Second step and third step are optional
+4. After done, there is a service account that newly created under **Service Accounts** list. Open it
+5. Click the button **ADD KEY** and choose **JSON**
+6. Download the file and change its name to `credentials.json`
+7. Move this file to project directory in `app/Http/Controllers`
+8. Finish
 
-## Learning Laravel
+## Configure TinyMCE
+1. Open [TinyMCE](https://www.tiny.cloud)
+2. Complete the registration
+3. After that, you got API Key in Dashboard
+4. Copy the API Key and paste to `app.blade.php` file in project direcotry `resources/views/layouts` on `line 16`
+```php
+<script src="https://cdn.tiny.cloud/1/<API KEY>/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+```
+5. Finish
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Solve Libraries Problem
+There are problems with the libraries. Do this step to solve the problems
+### Problem 1
+#### Error
+```
+ErrorException
+implode(): Passing glue string after array is deprecated. Swap the parameters 
+```
+#### Solution 
+Open `Resouce.php` file in project directory `vendor/google/apiclient/src/Google/Service`. In `line 291`, change
+```php
+$requestUrl .= '?' . implode($queryVars, '&');
+```
+to
+```php
+$requestUrl .= '?' . implode('&', $queryVars);
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Problem 2
+#### Error
+```
+ErrorException
+count(): Parameter must be an array or an object that implements Countable 
+```
+#### Solution
+Open `CurlFactory.php` file in project directory `vendor/guzzlehttp/guzzle/src/Handler`. In `line 67`, change
+```php
+if (count($this->handles) >= $this->maxHandles) {
+```
+to
+```php
+if (count( (array) $this->handles) >= $this->maxHandles) {
+```
 
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Author
+Kurniandha Sukma Yunastrian

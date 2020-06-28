@@ -1,0 +1,17 @@
+.profile {
+    display: inline-block;
+    text-align: center;
+}
+
+#profile-name {
+    font-weight: bold;
+    margin-top: 5rem;
+}
+
+#edit {
+    margin-top: 2rem;
+}
+
+.editpass {
+    float: left;
+}
