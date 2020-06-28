@@ -43,14 +43,14 @@
     <div class="row justify-content">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header"><b>Kelasku</b></div>
+                <div class="card-header bg-primary text-white"><b>Kelasku</b></div>
                 <div class="card-columns card-body">
                     @if( count($enrolled) == 0 )
                         Tidak ada kelas yang diikuti
                     @endif
                     @foreach($enrolled as $enroll)
                         <div class="card course" style="width: 14rem">
-                            <img src="img/course1.png" class="card-img-top" alt="No Picture">
+                            <img src="img/course.png" class="card-img-top" alt="No Picture">
                             <div class="card-header">{{ $enroll->name }}</div>
                             <a href="/course/<?php echo $enroll->id; ?>" class="stretched-link"></a>
                         </div>
@@ -95,9 +95,9 @@
         </div>
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header"><b>Profil</b></div>
+                <div class="card-header bg-primary text-white"><b>Profil</b></div>
                 <div class="card-body profile">
-                    <img src="img/profile.jpg" style="width:120px;height:120px;" alt="No Picture"> <br/> <br/>
+                    <img src="img/{{ $image }}" style="width:120px;height:120px;" alt="No Picture"> <br/>
                     <a id="profile-name">{{ $profile->name }}</a> <br/>
                     <a id="email">{{ $profile->email }}</a> <br/>
                     <a id="role">{{ $role }}</a> <br/><br/>
@@ -138,7 +138,7 @@
         <div class="py-4 row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header"><b>Kelas Tersedia</b></div>
+                    <div class="card-header bg-primary text-white"><b>Kelas Tersedia</b></div>
                     <div class="accordion" id="accordionCourses">
                         @foreach($courses as $index => $course)
                             <div class="card">
@@ -149,11 +149,15 @@
                                 <div id="collapse<?php echo $course->id; ?>" class="collapse" aria-labelledby="heading<?php echo $course->id; ?>" data-parent="#accordionCourses">
                                     <div class="card-body">
                                         {{ $course->description }} <br/><br/>
-                                        <form action="course/enroll" method="post">
-                                            {{ csrf_field() }}
-                                            <input style="display: none;" type="number" class="form-control" name="enroll_id" id="enroll_id" required="required" value="<?php echo $course->id ?>">
-                                            <button type="submit" class="btn btn-primary">Daftar Kelas</button>
-                                        </form>
+                                        @if( in_array($course, $enrolled) )
+                                        <a style="color:green;">Anda sudah mengikuti kelas ini</a>
+                                        @else
+                                            <form action="course/enroll" method="post">
+                                                {{ csrf_field() }}
+                                                <input style="display: none;" type="number" class="form-control" name="enroll_id" id="enroll_id" required="required" value="<?php echo $course->id ?>">
+                                                <button type="submit" class="btn btn-primary">Daftar Kelas</button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

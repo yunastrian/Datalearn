@@ -38,6 +38,13 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+    @elseif( request()->get('msg') == 6 )
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            Akses Tidak Diperbolehkan
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     @else
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             Pembuatan Materi Gagal
@@ -50,7 +57,7 @@
     <div class="row justify-content">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header"><b>Kelas {{ $course->name }}</b></div>
+                <div class="card-header bg-primary text-white"><b>Kelas {{ $course->name }}</b></div>
                 @if( count($topics) == 0 )
                     <div class="card-body">Tidak ada Materi</div>
                 @endif
@@ -219,7 +226,7 @@
         <div class="col-md-4">
             @if(Auth::user()->role == 0)
                 <div class="card">
-                    <div class="card-header"><b>Progress</b></div>
+                    <div class="card-header bg-primary text-white"><b>Progress</b></div>
                     <div class="card-body">
                         <table class="table table-hover">
                             <thead>
@@ -242,12 +249,16 @@
                 <br/>
             @endif
             <div class="card">
-                <div class="card-header"><b>Peserta Kelas</b></div>
+                <div class="card-header bg-primary text-white"><b>Peserta Kelas</b></div>
                 <div class="card-body">
                     {{ $teacher }} (Pengajar) <br/>
                     @foreach($students as $student)
                         {{ $student }} <br/>
                     @endforeach
+                    @if(Auth::user()->role == 1)
+                        <br/>
+                        <a href="<?php echo $course->id; ?>/grade" class="btn btn-primary" role="button">Lihat Nilai</a>
+                    @endif
                 </div>
             </div>
         </div>

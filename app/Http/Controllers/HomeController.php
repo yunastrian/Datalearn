@@ -42,7 +42,12 @@ class HomeController extends Controller
             $enrolled[] = DB::table('courses')->where('id', $id)->first();
         }
 
-        return view('home', ['profile' => $profile, 'role' => $role, 'courses' => $courses, 'enrolled' => $enrolled]);
+        $image = 'student.png';
+        if (Auth::user()->role == 1) {
+            $image = 'lecturer.png';
+        }
+
+        return view('home', ['image' => $image, 'profile' => $profile, 'role' => $role, 'courses' => $courses, 'enrolled' => $enrolled]);
     }
 
     /**
